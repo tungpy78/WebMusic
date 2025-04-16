@@ -14,7 +14,7 @@ function LayoutDefault() {
       <Header className="layoutdefault__header">
           <HeaderLayout />
       </Header>
-      <Layout>
+      <Layout className="layoutdefault__main">
         <Sider className="layoutdefault__sider">
           <SiderLayout />
         </Sider>
@@ -23,7 +23,7 @@ function LayoutDefault() {
         </Content>
       </Layout>
       <Layout>
-        <Footer>
+        <Footer className="layoutdefault__footer">
           <FooterLayout />
         </Footer>
       </Layout>

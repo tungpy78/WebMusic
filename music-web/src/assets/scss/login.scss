@@ -1,0 +1,10 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+}
+.inner-content{
+    display: flex;
+    justify-content: space-between;
+}
