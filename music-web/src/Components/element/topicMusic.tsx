@@ -3,6 +3,7 @@ import { getTopic } from "../../Services/topic.service";
 import "../../assets/scss/dashboard.scss";
 import { Button, Card, Col, Row } from "antd";
 import { Topic } from '../../models/Topic.model';
+import { Link } from "react-router-dom";
 
 
 function TopicMusic(){
@@ -10,14 +11,18 @@ function TopicMusic(){
 
     useEffect(() => {
         const fethApi = async () => {
-            const result = await getTopic();
-            console.log("result", result);
-            setTopics(result);
+            try {
+                const result = await getTopic();
+            
+                setTopics(result?.data);
+            } catch (error) {
+                console.log("errortopic", error);
+            }
         }
         fethApi();
     },[]);
 
-    console.log("topics", topics);
+    
 
     return(
         <>
@@ -35,7 +40,9 @@ function TopicMusic(){
                                 <h4>{item.title}</h4>
                                 <p>{item.description}</p>
                             </div>
-                            <Button >Xem chi tiết</Button>
+                            <Button>
+                                <Link to={`/topic/${item._id}`}>Xem chi tiết</Link>
+                            </Button>
                         </div>
                     </Col>
                 ))}
@@ -43,6 +50,7 @@ function TopicMusic(){
             </>
         ):(
             <>
+            <h2>Đang load</h2>
             </>
         )}
         </>

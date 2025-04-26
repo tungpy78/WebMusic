@@ -84,27 +84,7 @@
             opacity: 1;
           }
 
-        .favorite-button {
-            position: absolute;
-            bottom: 25px;
-            right: 10px;
-            font-size: 18px;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            cursor: pointer;
-            z-index: 2;
-          }
-          &:hover .favorite-button {
-            opacity: 1;
-          }
+        
     }
 
 }

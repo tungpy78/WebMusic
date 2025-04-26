@@ -1,0 +1,26 @@
+.inner__image{
+    width: auto;
+    height: 350px;
+    border-radius: 0.5rem;
+    border: 1px solid #170F23;
+    border-radius: 10px;
+    overflow: hidden;
+    img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+.inner__title{
+   h3{
+    margin: 2px 0;
+   }
+   p{
+    margin: 5px 0;
+   }
+}
+.inner__info{
+    padding: 10px;
+    border: 1px solid #312541;
+    border-radius: 6px ;
+}

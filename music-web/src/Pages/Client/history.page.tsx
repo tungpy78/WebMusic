@@ -3,22 +3,25 @@ import { getHistory } from "../../Services/history.service";
 import { History } from "../../models/history.model";
 import { PlayCircleOutlined } from "@ant-design/icons";
 
-function HintMusic(){
+
+function HistorySong(){
     const [history, setHistory] = useState<History[]>([])
     useEffect(() => {
         const fetchApi = async () => {
             const response = await getHistory();
-            setHistory(response.data.slice(0, 6)) // <-- Lấy 6 phần tử đầu
-        }
+            setHistory(response.data)
+        }   
         fetchApi();
     },[])
-
-    return (
+    console.log(history)
+    return(
         <>
-        <h2>Gợi ý cho bạn</h2>
-        <div className="inner__list">
-            {history.map((item) => (
-                <div className="inner__item" key={item._id}>
+        <h1>Nghe gần đây</h1>
+        {history.length > 0 ? (
+            <>
+            <div className="inner__list">
+                {history.map((item) => (
+                    <div className="inner__item" key={item._id}>
                     <div className="inner__item--image">
                         <img src={item.songId.avatar} alt={item.songId.title} />
                     </div>
@@ -27,12 +30,18 @@ function HintMusic(){
                         <p>{item.songId.title}</p>
                     </div>
                     <div className="play-button">
-                        <PlayCircleOutlined />
-                    </div>
+                            <PlayCircleOutlined />
+                        </div>
                 </div>
-            ))}
-        </div>
+                ))}
+            </div>
+            </>
+        ):(
+            <>
+            <h2>Danh sách trống</h2>
+            </>
+        )}
         </>
     )
 }
-export default HintMusic
+export default HistorySong

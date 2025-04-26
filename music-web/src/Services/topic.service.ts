@@ -1,13 +1,12 @@
-import { AxiosError } from "axios";
 import { get } from "../Utils/authorizedAxios";
 
 
 export const getTopic = async () => {
-    try {
-        const result = await get(`topic`);
-        return result;
-    } catch (error) {
-        const axiosError = error as AxiosError;
-        return axiosError.response;
-    }
+    const result = await get(`topic`);
+    return result;
+}
+
+export const getSongByTopic = async (topicId: string) => {
+    const result = await get(`topic/${topicId}`);
+    return result;
 }

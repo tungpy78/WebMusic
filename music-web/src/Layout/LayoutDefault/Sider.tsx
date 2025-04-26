@@ -1,4 +1,4 @@
-import { FireOutlined, FundOutlined, ProductOutlined, StarOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from "@ant-design/icons"
+import { ClockCircleOutlined, CustomerServiceOutlined, FireOutlined, FundOutlined, HeartOutlined, ProductOutlined, StarOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from "@ant-design/icons"
 import { Menu } from "antd"
 import { Link } from "react-router-dom"
 
@@ -14,7 +14,7 @@ function SiderLayout(){
                 {
                 key: '1',
                 icon: <UserOutlined />, 
-                label: 'Thư viện',
+                label: <Link to={"/library"} >Thư viện</Link>
                 },
                 {
                 key: '2',
@@ -29,13 +29,29 @@ function SiderLayout(){
                 {
                 key: '4',
                 icon: <ProductOutlined />,
-                label: 'Chủ đề thể loại',
+                label: <Link to="/topics">Chủ đề thể loại</Link>
                 },
                 {
                 key: '5',
                 icon: <FireOutlined />,
                 label: 'Top 100',
                 },
+                {
+                key: '6',
+                icon: <ClockCircleOutlined />,
+                label: <Link to='/history'>Nghe gần đây</Link>,
+                },
+                {
+                key: '7',
+                icon: <HeartOutlined />,
+                label: <Link to='/library'>Bài hát yêu thích</Link>,
+                },
+                 {
+                key: '8',
+                icon: <CustomerServiceOutlined />,
+                label: <Link to='/library'>PlayList</Link>,
+                },
+
             ]}
         />
     </>

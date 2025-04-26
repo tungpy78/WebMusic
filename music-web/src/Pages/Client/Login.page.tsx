@@ -1,14 +1,30 @@
 import { Button, Card, Form, Input } from "antd";
 import "../../assets/scss/login.scss"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { userService } from "../../Services/userService";
+import { toast, ToastContainer } from "react-toastify";
 function Login(){
+    const navigate = useNavigate();
     const handleSubmit = async (Values: any) => {
-        const { phone, password } = Values;
-        const response = await userService.login(phone, password);
+        try {
+            const { phone, password } = Values;
+            const response = await userService.login(phone, password);
+            
+            // Save the token to local storage or state management
+            localStorage.setItem("accessToken", response.data.accessToken);
+            localStorage.setItem("refreshToken", response.data.refreshToken);
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+            
+            toast.success(response.data.message ?? "Login success!");
 
+            navigate("/");
+        } catch (error) {
+            console.log("error", error);
+        }
     }
     return (
+        <>
+        <ToastContainer />
         <div className="login-page">
             <Card style={{ width: 400, margin: 'auto', marginTop: '100px', padding: '20px' }}>
                 <Form layout="vertical" name="FormLogin" onFinish={handleSubmit}>
@@ -39,7 +55,7 @@ function Login(){
                 </Form>
             </Card>
         </div>
-        
+        </>
     );
 }
 export default Login;
