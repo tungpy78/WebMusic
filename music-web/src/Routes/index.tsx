@@ -9,6 +9,11 @@ import Library from "../Pages/Client/library.page";
 import PlayListDetail from "../Pages/Client/playlistdetail";
 import TopicMusic from "../Components/element/topicMusic";
 import HistorySong from "../Pages/Client/history.page";
+import path from "path";
+import ForgotPassword from "../Pages/Client/ForgotPassword";
+import VerifyOtp from "../Pages/Client/Verify-otp";
+import ResetPassword from "../Pages/Client/ResetPassword";
+import Profile from "../Pages/Client/Profile.page";
 
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -30,7 +35,11 @@ const UnauthorizedRoute = ({ children }: { children: React.ReactNode }) => {
 export const routes =[
     {
         path: "/",
-        element: <LayoutDefault />,
+        element: (
+            <ProtectedRoute>
+                <LayoutDefault />
+            </ProtectedRoute>
+          ),
         children: [
             {
                 path: "/",
@@ -60,6 +69,10 @@ export const routes =[
                 path: "/history",
                 element: <HistorySong />,
             },
+            {
+                path: "/profile",
+                element: <Profile />,
+            },
         ]
 
     },
@@ -79,4 +92,16 @@ export const routes =[
             </UnauthorizedRoute>
           ),
     },
+    {
+        path: "/forgot-password",
+        element: <ForgotPassword />,
+    },
+    {
+        path: "/verify-otp",
+        element: <VerifyOtp />
+    },
+    {
+        path: "/reset-password",
+        element: <ResetPassword />,
+    }
 ]

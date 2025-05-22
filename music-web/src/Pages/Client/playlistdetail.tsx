@@ -80,6 +80,7 @@ function PlayListDetail() {
     await removeSongPlayList(songId, playlistId)
     fetchApi()
   }
+  console.log("dataPlayList", dataPlayList)
 
     
    
@@ -96,7 +97,7 @@ function PlayListDetail() {
                                 <img src={dataPlayList.songs[0].songId.avatar} alt={dataPlayList.name} />
                             </div>
                             <h3>{dataPlayList.name}</h3>
-                            <p>Tạo bởi {dataPlayList.userId.fullname || "Unknown"}</p>
+                            <p>Tạo bởi {dataPlayList.userFullname || "Unknown"}</p>
                             <Button onClick={handlePlay}>{isPlaying ? "Tạm dừng" : "Phát tất cả"}</Button>
                         </Col>
                         <Col span={17}>

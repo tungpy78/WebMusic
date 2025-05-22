@@ -9,11 +9,12 @@ function Login(){
         try {
             const { phone, password } = Values;
             const response = await userService.login(phone, password);
+            console.log("response", response);
             
             // Save the token to local storage or state management
             localStorage.setItem("accessToken", response.data.accessToken);
             localStorage.setItem("refreshToken", response.data.refreshToken);
-            localStorage.setItem("user", JSON.stringify(response.data.user));
+            localStorage.setItem("user", JSON.stringify(response.data.payload));
             
             toast.success(response.data.message ?? "Login success!");
 

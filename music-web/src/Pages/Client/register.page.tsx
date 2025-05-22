@@ -1,13 +1,31 @@
 import { Button, Card, Form, Input } from "antd";
 import "../../assets/scss/login.scss"
-import { Link } from "react-router-dom";
-import { Value } from "sass";
+import { Link, useNavigate } from "react-router-dom";
+import { userService } from "../../Services/userService";
+import { toast, ToastContainer } from "react-toastify";
+
 function Register(){
-    
+    const naviagete = useNavigate();
+    const handleSubmit = async (values: any) => {
+        try {
+            const { fullname, phone, email, password } = values;
+            const response = await userService.register(fullname, phone, email, password);
+            toast.success(response.data.message ?? "Register success!");
+            setTimeout(() => {
+                naviagete("/login");
+            }
+            , 1000);
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
+
     return (
+        <>
+         <ToastContainer />
         <div className="register-page">
             <Card style={{ width: 400, margin: 'auto', marginTop: '100px', padding: '20px' }}>
-                <Form layout="vertical" name="FormLogin">
+                <Form layout="vertical" name="FormLogin" onFinish={handleSubmit}>
                     <h1 style={{textAlign:"center"}}>Login</h1>
                     <Form.Item
                         label="Full Name"
@@ -49,6 +67,7 @@ function Register(){
                 </Form>
             </Card>
         </div>
+        </>
         
     );
 }

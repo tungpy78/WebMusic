@@ -13,6 +13,10 @@ export const addFavorite = async(songId: string) => {
     );
     return result;
 }
+export const search = async (keyword: string) => {
+    const result = await get(`song/search?keyword=${keyword}`);
+    return result;
+}
 
 export const addPlayList = async(songId: string,playListId: string) => {
 

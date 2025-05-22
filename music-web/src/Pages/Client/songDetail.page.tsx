@@ -6,7 +6,7 @@ import { FolderAddOutlined, HeartOutlined, PauseOutlined, PlayCircleOutlined } f
 import { useEffect, useRef, useState } from "react";
 import { Song } from "../../models/song.model";
 import { addFavorite, addHistory, addPlayList, createPlayList, getSong } from "../../Services/song.service";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import APlayer from "aplayer"; // Import APlayer
 import 'aplayer/dist/APlayer.min.css'; // Import CSS của APlayer
 import TabPane from "antd/es/tabs/TabPane";
@@ -38,8 +38,7 @@ function SongDetail() {
 
     useEffect(() => {
         fetchApi();
-    },[])
-    
+    },[songId]);
 
     useEffect(() => {
         if (Favorite.length > 0) {

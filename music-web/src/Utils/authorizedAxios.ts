@@ -69,7 +69,7 @@ authorizedAxiosInstance.interceptors.response.use((response) => {
     // Do something with response error
     console.log("error", error);
     //Nếu như nhận được lỗi 401 thì sẽ xóa token và chuyển về trang login
-    if (error.response.status === 401) 
+    if (error.response?.status === 401) 
       {
         console.log("error", error.response.data.message);
         localStorage.removeItem("accessToken");
