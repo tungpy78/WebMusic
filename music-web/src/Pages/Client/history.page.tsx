@@ -4,7 +4,6 @@ import { History } from "../../models/history.model";
 import { PlayCircleOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
-
 function HistorySong(){
     const [history, setHistory] = useState<History[]>([])
     useEffect(() => {
