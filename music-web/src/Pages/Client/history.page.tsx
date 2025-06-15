@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { getHistory } from "../../Services/history.service";
 import { History } from "../../models/history.model";
 import { PlayCircleOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 
 function HistorySong(){
@@ -21,18 +22,18 @@ function HistorySong(){
             <>
             <div className="inner__list">
                 {history.map((item) => (
-                    <div className="inner__item" key={item._id}>
+                    <Link to={`/song/${item.songId._id}`} className="inner__item" key={item._id}>
                     <div className="inner__item--image">
-                        <img src={item.songId.avatar} alt={item.songId.title} />
-                    </div>
-                    <div className="inner__item--title">
-                        <h4>{item.songId.artist.name}</h4>
-                        <p>{item.songId.title}</p>
-                    </div>
-                    <div className="play-button">
-                            <PlayCircleOutlined />
-                        </div>
-                </div>
+                           <img src={item.songId.avatar} alt={item.songId.title} />
+                       </div>
+                       <div className="inner__item--title">
+                           <h4>{item.songId.artist.name}</h4>
+                           <p>{item.songId.title}</p>
+                       </div>
+                       <div className="play-button">
+                           <PlayCircleOutlined />
+                       </div>   
+                    </Link>
                 ))}
             </div>
             </>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { getHistory } from "../../Services/history.service";
 import { History } from "../../models/history.model";
 import { PlayCircleOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 function HintMusic(){
     const [history, setHistory] = useState<History[]>([])
@@ -18,7 +19,7 @@ function HintMusic(){
         <h2>Gợi ý cho bạn</h2>
         <div className="inner__list">
             {history.map((item) => (
-                <div className="inner__item" key={item._id}>
+                <Link to={`/song/${item.songId._id}`} className="inner__item" style={{ textDecoration: 'none', color: 'inherit' }} key={item._id}>
                     <div className="inner__item--image">
                         <img src={item.songId.avatar} alt={item.songId.title} />
                     </div>
@@ -29,7 +30,7 @@ function HintMusic(){
                     <div className="play-button">
                         <PlayCircleOutlined />
                     </div>
-                </div>
+                </Link>
             ))}
         </div>
         </>

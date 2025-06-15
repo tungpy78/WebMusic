@@ -30,6 +30,7 @@ export interface Playlist1 {
       _id: string;
       fullname: string;
     };
+    userFullname: string;  // Thêm trường này để lưu tên người dùng
     songs: {
       _id: string;
       songId: Song;  // Thay đổi kiểu của songId thành Song thay vì string

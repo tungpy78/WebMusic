@@ -18,27 +18,51 @@ import Album from "../Pages/Admin/Album";
 import Account from "../Pages/Admin/Account";
 import HistoryManager from "../Pages/Admin/HistoryManager";
 import Artist from "../Pages/Admin/Artist";
+//import path from "path";
+import ForgotPassword from "../Pages/Client/ForgotPassword";
+import VerifyOtp from "../Pages/Client/Verify-otp";
+import ResetPassword from "../Pages/Client/ResetPassword";
+import Profile from "../Pages/Client/Profile.page";
 
+const getUser = () => {
+    try {
+        const item = localStorage.getItem("user");
+        if (!item || item === "undefined") return null;
+        return JSON.parse(item);
+    } catch (error) {
+        console.error("Failed to parse user:", error);
+        return null;
+    }
+};
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
+const ProtectedRoute = ({ children, role }: { children: React.ReactNode; role?: string }) => {
+    const user = getUser();
 
     if (!user) return <Navigate to="/login" replace />;
 
+    if (role && user.role !== role) {
+        return <Navigate to="/" replace />;
+    }
+
     return <>{children}</>;
 };
+
 const UnauthorizedRoute = ({ children }: { children: React.ReactNode }) => {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
+    const user = getUser();
 
     if (user) return <Navigate to="/" replace />;
 
     return <>{children}</>;
-}
+};
 
 export const routes =[
     {
         path: "/",
-        element: <LayoutDefault />,
+        element: (
+            <ProtectedRoute>
+                <LayoutDefault />
+            </ProtectedRoute>
+          ),
         children: [
             {
                 path: "/",
@@ -68,12 +92,20 @@ export const routes =[
                 path: "/history",
                 element: <HistorySong />,
             },
+            {
+                path: "/profile",
+                element: <Profile />,
+            },
         ]
 
     },
     {
         path: "/admin",
-        element: <LayoutAdmin />,
+        element: (
+            <ProtectedRoute role = 'Admin'>
+                <LayoutAdmin />
+            </ProtectedRoute>
+        ),
         children: [
             {
                 path: "dashboard",
@@ -125,4 +157,16 @@ export const routes =[
             </UnauthorizedRoute>
           ),
     },
+    {
+        path: "/forgot-password",
+        element: <ForgotPassword />,
+    },
+    {
+        path: "/verify-otp",
+        element: <VerifyOtp />
+    },
+    {
+        path: "/reset-password",
+        element: <ResetPassword />,
+    }
 ]
