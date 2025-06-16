@@ -25,6 +25,7 @@ const Topic = () => {
     
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [isHoveringAdd, setIsHoveringAdd] = useState(false);
+    
     const [topics, setTopics] =  useState<TopicType[]>([]);
         useEffect(() => {
             const fethApi = async () => {
@@ -159,7 +160,7 @@ const Topic = () => {
                             transition: 'background-color 0.3s ease'
                         }}
                     >
-                        Thêm thể loại
+                        Thêm thể nghệ sĩ
                     </button>
                 </div>
 
@@ -174,7 +175,7 @@ const Topic = () => {
                 }}>
                     <div>STT</div>
                     <div>Hình ảnh</div>
-                    <div>Tên thể loại</div>
+                    <div>Tên nghệ sĩ</div>
                     <div>Mô tả</div>
                     <div style={{textAlign: 'center'}}>Hành động</div>
                 </div>
@@ -322,7 +323,7 @@ const Topic = () => {
                             flexDirection: 'column',
                             gap: '16px'
                         }}>
-                            <h2 style={{margin: 0, textAlign: 'center'}}>Thêm thể loại</h2>
+                            <h2 style={{margin: 0, textAlign: 'center'}}>{iscreate ? 'Tạo thể loại mới' : 'Chỉnh sửa thể loại'}</h2>
                             <input
                                 type="text"
                                 placeholder="Nhập tên thể loại"

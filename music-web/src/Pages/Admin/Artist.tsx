@@ -1,43 +1,95 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { createArtist, getArtist, updateArtist } from '../../Services/artist.service';
+
+type ArtistType ={
+    _id: string,
+    name: string,
+    bio: string,
+    imageUrl: string,
+}
+
+export type ArtistRequest = {
+    name: string,
+    bio: string,
+    fileAvata: File | null,
+}
 
 const Artist = () => {
     const [showForm, setShowForm] = useState(false);
+    const [artistId, setArtistId] = useState('');
     const [artistName, setArtistName] = useState('');
-    const [artistRole, setRoleArtist] = useState('Ca sĩ');
+    const [artistBio, setBioArtist] = useState('');
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+     const [iscreate, setiscreate] = useState<boolean>(false);
     const [isHoveringAdd, setIsHoveringAdd] = useState(false);
-    const [accounts, setAccounts] = useState(Array.from({ length: 3 }, (_, i) => ({
-        id: i + 1,
-        name: `Vai trò ${i + 1}`,
-        role: 'Ca sĩ',
-        created: '2024-01-01',
-        updated: '2024-05-01'
-    })));
+    const [artist, setArtist] = useState<ArtistType[]>([])
+     useEffect(() => {
+                const fethApi = async () => {
+                    try {
+                        const result = await getArtist();
+                        setArtist(result?.data);
+                        console.error(result?.data);
+                    } catch (error) {
+                        console.log("errortopic", error);
+                    }
+                }
+                fethApi();
+            },[]);
     const [currentPage, setCurrentPage] = useState(0);
     const accountsPerPage = 8;
-    const totalPages = Math.ceil(accounts.length / accountsPerPage);
+    const totalPages = Math.ceil(artist.length / accountsPerPage);
     const startIndex = currentPage * accountsPerPage;
-    const currentAccounts = accounts.slice(startIndex, startIndex + accountsPerPage);
+    const currentAccounts = artist.slice(startIndex, startIndex + accountsPerPage);
 
-    const handleSave = () => {
+    const handleSave = async() => {
         if (!artistName.trim()) return;
-        const newAccount = {
-            id: accounts.length + 1,
+        const newArtist : ArtistRequest = {
             name: artistName,
-            role: artistRole,
-            created: new Date().toISOString().split('T')[0],
-            updated: new Date().toISOString().split('T')[0]
+            bio: artistBio,
+            fileAvata: imageFile,
         };
-        setAccounts([...accounts, newAccount]);
-        alert(`Đã lưu nghệ sĩ: ${artistName}`);
-        setArtistName('');
-        setShowForm(false);
-        setCurrentPage(Math.floor((accounts.length) / accountsPerPage)); // chuyển tới trang mới
+        try {
+            if(iscreate){
+                await createArtist(newArtist);
+                alert('Tạo thành công!');
+            }else{
+                
+                await updateArtist(artistId,newArtist);
+                alert('update thành công!');
+            }
+            const updatedResult = await getArtist();
+            setArtist(updatedResult.data);
+            setArtistId('');
+            setArtistName('');
+            setBioArtist('');
+            setImageFile(null);
+            setImagePreview(null);
+            setShowForm(false);
+            setiscreate(false);
+            setCurrentPage(Math.floor(artist.length / accountsPerPage));
+        } catch (err) {
+            console.error(err);
+            alert('Tạo thất bại:' + err);
+        }
     };
 
     const handleCancel = () => {
+        setArtistId('');
         setArtistName('');
+        setBioArtist('');
+        setImageFile(null);
+        setImagePreview(null);
         setShowForm(false);
+    };
+
+    const handleEditClick = (artist: ArtistType) => {
+        setShowForm(true);
+        setArtistName(artist.name);
+        setBioArtist(artist.bio);
+        setImagePreview(artist.imageUrl)
     };
 
 
@@ -59,7 +111,10 @@ const Artist = () => {
                 }}>
                     <h2>Danh sách nghệ sĩ</h2>
                     <button
-                        onClick={() => setShowForm(true)}
+                        onClick={() => {
+                            setShowForm(true);
+                            setiscreate(true);
+                            }}
                         onMouseEnter={() => setIsHoveringAdd(true)}
                         onMouseLeave={() => setIsHoveringAdd(false)}
                         style={{
@@ -78,7 +133,7 @@ const Artist = () => {
 
                 <div style={{
                     display: 'grid',
-                    gridTemplateColumns: '10% 30% 15% 15% 15% 15%',
+                    gridTemplateColumns: '8% 15% 25% 25% 27%',
                     fontWeight: 'bold',
                     padding: '12px 16px',
                     backgroundColor: '#f1f1f1',
@@ -86,19 +141,18 @@ const Artist = () => {
                     borderRadius: '8px 8px 0 0'
                 }}>
                     <div>STT</div>
+                    <div>Hình ảnh</div>
                     <div>Tên nghệ sĩ</div>
-                    <div>Vai trò</div>
-                    <div>Ngày tạo</div>
-                    <div>Ngày cập nhật</div>
+                    <div>Thông Tin</div>
                     <div style={{textAlign: 'center'}}>Hành động</div>
                 </div>
 
-                {currentAccounts.map((account, index) => (
+                {currentAccounts.map((artist, index) => (
                     <div
-                        key={account.id}
+                        key={artist._id}
                         style={{
                             display: 'grid',
-                            gridTemplateColumns: '10% 30% 15% 15% 15% 15%',
+                            gridTemplateColumns: '8% 15% 25% 25% 27%',
                             padding: '12px 16px',
                             backgroundColor: '#fff',
                             marginBottom: '8px',
@@ -112,13 +166,23 @@ const Artist = () => {
                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}
                     >
                         <div>{startIndex + index + 1}</div>
-                        <div>{account.name}</div>
-                        <div>{account.role}</div>
-                        <div>{account.created}</div>
-                        <div>{account.updated}</div>
+                        <div>
+                            <img
+                                src={artist.imageUrl || 'https://via.placeholder.com/60'} // fallback nếu không có ảnh
+                                alt="avatar"
+                                style={{
+                                    width: '60px',
+                                    height: '60px',
+                                    objectFit: 'cover',
+                                    borderRadius: '8px'
+                                }}
+                            />
+                        </div>
+                        <div>{artist.name}</div>
+                        <div>{artist.bio}</div>   
                         <div style={{display: 'flex', justifyContent: 'center', gap: '10px'}}>
                             <button
-                                disabled
+                                onClick={() => {handleEditClick(artist);setiscreate(false);setArtistId(artist._id)}}
                                 style={{
                                     padding: '6px 12px',
                                     backgroundColor: 'transparent',
@@ -145,37 +209,6 @@ const Artist = () => {
                                         e.currentTarget.style.color = '#2196F3'; // Trở về màu cũ
                                     }}
                                 />
-                            </button>
-
-                            <button
-                                disabled
-                                style={{
-                                    padding: '6px 12px',
-                                    backgroundColor: 'transparent',
-                                    color: '#4CAF50',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer',
-                                    marginRight: '8px'
-                                }}
-                            >
-                                <FontAwesomeIcon
-                                    icon={['fas', 'trash']}
-                                    style={{
-                                        color: '#f44336', // Màu đỏ
-                                        transition: 'transform 0.2s ease, color 0.2s ease',
-                                        cursor: 'pointer'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.transform = 'scale(1.2)';
-                                        e.currentTarget.style.color = '#b71c1c'; // Màu đỏ đậm khi hover
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.transform = 'scale(1)';
-                                        e.currentTarget.style.color = '#f44336';
-                                    }}
-                                />
-
                             </button>
                         </div>
                     </div>
@@ -227,7 +260,7 @@ const Artist = () => {
                             flexDirection: 'column',
                             gap: '16px'
                         }}>
-                            <h2 style={{margin: 0, textAlign: 'center'}}>Thêm nghệ sĩ</h2>
+                            <h2 style={{margin: 0, textAlign: 'center'}}>{iscreate ? 'Tạo nghệ sĩ mới' : 'Chỉnh sửa nghệ sĩ'}</h2>
                             <input
                                 type="text"
                                 placeholder="Nhập tên nghệ sĩ"
@@ -242,15 +275,47 @@ const Artist = () => {
                                 }}
                             />
 
-                            <select
-                                value={artistRole}
-                                onChange={(e) => setRoleArtist(e.target.value)}
-                                style={{...inputStyle, cursor: 'pointer'}}
-                            >
-                                <option value="Ca sĩ">Ca sĩ</option>
-                                <option value="Nhạc sĩ">Nhạc sĩ</option>
-                            </select>
-
+                            <input
+                                type="text"
+                                placeholder="Mô tả"
+                                value={artistBio}
+                                onChange={(e) => setBioArtist(e.target.value)}
+                                style={{
+                                    padding: '10px 14px',
+                                    fontSize: '16px',
+                                    borderRadius: '6px',
+                                    border: '1px solid #ccc',
+                                    outline: 'none',
+                                }}
+                            />
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                        setImageFile(file);
+                                        setImagePreview(URL.createObjectURL(file)); 
+                                    }
+                                }}
+                                style={{
+                                    padding: '10px 0',
+                                    fontSize: '16px'
+                                }}
+                            />
+                            {imagePreview && (
+                                <img
+                                    src={imagePreview}
+                                    alt="preview"
+                                    style={{
+                                        width: '100%',
+                                        maxHeight: '200px',
+                                        objectFit: 'cover',
+                                        borderRadius: '8px',
+                                        marginTop: '8px'
+                                    }}
+                                />
+                            )}
                             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px'}}>
                                 <button onClick={handleCancel} style={{
                                     padding: '10px 18px',
