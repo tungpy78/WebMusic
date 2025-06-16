@@ -54,12 +54,6 @@ export const patchFormData = async (path: string, data: any, config = {}) => {
     return response;
 };
 
-export const patchParam = async (path: string) => {
-  const response = await authorizedAxiosInstance.patch(path);
-  return response;
-};
-
-
 // Add a request interceptor
 authorizedAxiosInstance.interceptors.request.use((config) => {
     // Do something before request is sent

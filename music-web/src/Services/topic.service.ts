@@ -1,5 +1,5 @@
 import { TopicRequest } from "../Pages/Admin/Topic";
-import { get, patch, patchFormData, patchParam, post, postFormData } from "../Utils/authorizedAxios";
+import { get, patch, patchFormData, post, postFormData } from "../Utils/authorizedAxios";
 
 
 export const getTopic = async () => {
@@ -47,11 +47,11 @@ export const updateTopic = async(topicId: string,topicRequest: TopicRequest) =>{
 }
 
 export const deleteTopic = async (topicId: string) => {
-    const result = await patchParam(`topic/delete/${topicId}`);
+    const result = await patch(`topic/delete/${topicId}`,{});
     return result;
 }
 
 export const restoreTopic = async (topicId: string) => {
-    const result = await patchParam(`topic/restore/${topicId}`);
+    const result = await patch(`topic/restore/${topicId}`,{});
     return result;
 }
