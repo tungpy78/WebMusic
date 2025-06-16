@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const API_DOMAIN = "https://music-web-bevip.onrender.com";
+const API_DOMAIN = "http://localhost:5000";
 
 let authorizedAxiosInstance = axios.create({
     baseURL: API_DOMAIN,
