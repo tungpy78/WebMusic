@@ -2,7 +2,7 @@ import { data } from "react-router-dom";
 import {get, post} from "../Utils/authorizedAxios";
 
 export const getRole = async () => {
-    const result = await get(`role`);
+    const result = await get(`auth/getrole`);
     return result;
 }
 

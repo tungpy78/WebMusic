@@ -17,7 +17,8 @@ import {
     faExpand,
     faCaretDown,
     faPen,           // <-- Thêm dòng này
-    faTrash,          // <-- Thêm dòng này
+    faTrash,
+    faUndo,          // <-- Thêm dòng này
     faEye
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -47,5 +48,6 @@ library.add(
     faDrupal,
     faPen,
     faTrash,
+    faUndo,
     faEye
 );
