@@ -1,8 +1,9 @@
-import { ClockCircleOutlined, CustomerServiceOutlined, FireOutlined, FundOutlined, HeartOutlined, ProductOutlined, StarOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from "@ant-design/icons"
+import { ClockCircleOutlined, CustomerServiceOutlined, FireOutlined, FolderOutlined, FundOutlined, HeartOutlined, ProductOutlined, StarOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from "@ant-design/icons"
 import { Menu } from "antd"
 import { Link } from "react-router-dom"
 
-function SiderLayout(){    
+function SiderLayout(){   
+     
     return(
         <>
         <Menu
@@ -24,7 +25,7 @@ function SiderLayout(){
                 {
                 key: '3',
                 icon: <StarOutlined />,
-                label: 'BXH Nhạc mới',
+                label: <Link to="/ranks">Bảng xếp hạng</Link>,
                 },
                 {
                 key: '4',
@@ -33,23 +34,23 @@ function SiderLayout(){
                 },
                 {
                 key: '5',
-                icon: <FireOutlined />,
-                label: 'Top 100',
-                },
-                {
-                key: '6',
                 icon: <ClockCircleOutlined />,
                 label: <Link to='/history'>Nghe gần đây</Link>,
                 },
                 {
-                key: '7',
+                key: '6',
                 icon: <HeartOutlined />,
                 label: <Link to='/library'>Bài hát yêu thích</Link>,
                 },
                  {
-                key: '8',
+                key: '7',
                 icon: <CustomerServiceOutlined />,
                 label: <Link to='/library'>PlayList</Link>,
+                },
+                {
+                key: '8',
+                icon: <FolderOutlined />,
+                label: <Link to='/Album'>Album</Link>,
                 },
 
             ]}

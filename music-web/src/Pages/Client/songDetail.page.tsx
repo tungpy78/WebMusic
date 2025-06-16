@@ -6,7 +6,7 @@ import { FolderAddOutlined, HeartOutlined, PauseOutlined, PlayCircleOutlined } f
 import { useEffect, useRef, useState } from "react";
 import { Song } from "../../models/song.model";
 import { addFavorite, addHistory, addPlayList, createPlayList, getSong } from "../../Services/song.service";
-import { useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import APlayer from "aplayer"; // Import APlayer
 import 'aplayer/dist/APlayer.min.css'; // Import CSS của APlayer
 import TabPane from "antd/es/tabs/TabPane";
@@ -25,6 +25,7 @@ function SongDetail() {
     const [isModelPlayList, setIsModelPlayList] = useState(false)
     const [playListId, setPlayListId] = useState("");
     const playerRef = useRef<InstanceType<typeof APlayer> | null>(null);
+    
 
     const songId = params.songId as string;
     const fetchApi = async () => {
@@ -61,7 +62,9 @@ function SongDetail() {
                 audio: [
                     {
                         name: song.title,
-                        artist: song.artist.name,
+                         artist: Array.isArray(song.artist)
+                        ? song.artist.map((a) => a.name).join(", ")
+                        : "Unknown Artist",
                         url: song.audio, // Đảm bảo URL chính xác
                         cover: song.avatar, // Đảm bảo ảnh bìa chính xác
                     },
@@ -137,13 +140,21 @@ function SongDetail() {
                     </div>
                     <div className="inner__title">
                         <h3>{song.title}</h3>
-                        <p>{song.artist.name}</p>
+                       <p>
+                        Ca sĩ:&nbsp;
+                        {song.artist.map((artist, index) => (
+                            <span key={artist._id}>
+                            <Link to={`/artist/${artist._id}`}>{artist.name}</Link>
+                            {index < song.artist.length - 1 && ', '}
+                            </span>
+                        ))}
+                        </p>
                         <p>{song.like} người yêu thích</p>
                     </div>
                     <div>
                         <Button onClick={handlePlay} icon={isPlaying ? <PauseOutlined /> : <PlayCircleOutlined />} style={{marginTop: "10px"}} >{isPlaying ? "Dừng" : "Phát"}</Button>
                         <Button onClick={handleAddFavorite} icon={<HeartOutlined />} style={{marginTop: "10px"}} >{isFavorite ? "Đã yêu thích" : "Yêu thích"}</Button>
-                        {!isPlayList &&  <Button onClick={handlePlayList} icon={<FolderAddOutlined />} style={{marginTop: "10px"}} >Thêm vào Playlist</Button> }
+                        <Button onClick={handlePlayList} icon={<FolderAddOutlined />} style={{marginTop: "10px"}} >Thêm vào Playlist</Button>
                     </div>
                     </Col>
                 </>)}
@@ -154,7 +165,15 @@ function SongDetail() {
                     <div className="inner__info">
                         <h3>Thông tin</h3>
                         <p>Bài hát: {song?.title}</p>
-                        <p>Ca sĩ: {song?.artist.name}</p>
+                        <p>
+                            Ca sĩ:&nbsp;
+                            {song?.artist.map((artist, index) => (
+                                <span key={artist._id}>
+                                <Link to={`/artist/${artist._id}`}>{artist.name}</Link>
+                                {index < song.artist.length - 1 && ', '}
+                                </span>
+                            ))}
+                        </p>
                         <p>Ngày phát hành:</p>
                         <p>Mô tả: {song?.description}</p>
                         <p>lyric:</p>
@@ -193,10 +212,14 @@ function SongDetail() {
                         <Button
                         type="primary"
                         onClick={async () => {
-                            await addPlayList(songId,playListId)
-                            setIsModelPlayList(false)
-                            toast.success("Thêm vào playList thành công")
-                            fetchApi();
+                            try {
+                                const response = await addPlayList(songId, playListId);
+                                setIsModelPlayList(false)
+                                toast.success(response.data.message);
+                                fetchApi();
+                            } catch (error) {
+                                console.log(error);
+                            }
                         }}
                         >
                         Thêm vào Playlist

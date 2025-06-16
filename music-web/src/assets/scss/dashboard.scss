@@ -54,10 +54,15 @@
         &--title{
             h4{
                 margin: 0;
+                color:white;
             }
             p{
                 margin: 0;
+                &:hover{
+                    text-decoration: underline;
+                }
             }
+            
         }
         &:nth-child(3n){
             margin-right: 0;

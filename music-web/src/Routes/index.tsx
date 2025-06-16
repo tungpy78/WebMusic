@@ -14,6 +14,10 @@ import ForgotPassword from "../Pages/Client/ForgotPassword";
 import VerifyOtp from "../Pages/Client/Verify-otp";
 import ResetPassword from "../Pages/Client/ResetPassword";
 import Profile from "../Pages/Client/Profile.page";
+import Rank from "../Pages/Client/rank.page";
+import AlbumPage from "../Pages/Client/album.page";
+import AlbumDetail from "../Pages/Client/albumDetail";
+import ArtistPage from "../Pages/Client/artis.page";
 
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -72,6 +76,22 @@ export const routes =[
             {
                 path: "/profile",
                 element: <Profile />,
+            },
+            {
+                path: "/ranks",
+                element: <Rank/>,
+            },
+            {
+                path: "/album",
+                element: <AlbumPage />,
+            },
+            {
+                path: "/album/:albumId",
+                element: <AlbumDetail />,
+            },
+            {
+                path: "/artist/:artistId",
+                element: <ArtistPage />,
             },
         ]
 

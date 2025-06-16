@@ -39,8 +39,15 @@ function TopicDetail() {
                     <img src={item.avatar} alt="poster" />
                   </div>
                   <div className="inner__item--title">
-                    <h4>{item.artist.name}</h4>
-                    <p>{item.title}</p>
+                    <h4>{item.title}</h4>
+                    <p>
+                    {item.artist.map((artist, index) => (
+                      <span key={artist._id}>
+                        <Link to={`/artist/${artist._id}`}>{artist.name}</Link>
+                        {index < item.artist.length - 1 && ", "}
+                      </span>
+                    ))}
+                  </p>
                   </div>
                 </Link>
             

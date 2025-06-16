@@ -19,7 +19,7 @@ export interface Song {
     status: string;
     slug: string;
     deleted: boolean;
-    artist: Artist;
+    artist: Artist[];
     genre: Genre;
 }
 

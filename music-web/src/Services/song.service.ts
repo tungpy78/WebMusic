@@ -4,6 +4,10 @@ export const getSong = async (songId: string) => {
     const result = await get(`song/${songId}`);
     return result;
 }
+export const getAllSong = async () => {
+    const result = await get(`song`);
+    return result;
+}
 
 export const addFavorite = async(songId: string) => {
     const result = await post(`song/${songId}/favorite`,

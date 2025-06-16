@@ -27,8 +27,20 @@ function HistorySong(){
                            <img src={item.songId.avatar} alt={item.songId.title} />
                        </div>
                        <div className="inner__item--title">
-                           <h4>{item.songId.artist.name}</h4>
-                           <p>{item.songId.title}</p>
+                            <h4 style={{ margin: 0 , color: "white"}}>{item.songId.title}</h4>
+                            <p style={{ margin: 0, color: "white" }}>
+                            {item.songId.artist.map((artist, index) => (
+                                <span key={artist._id}>
+                                <Link
+                                    to={`/artist/${artist._id}`}
+                                    style={{ color: "white", textDecoration: "none" }}
+                                >
+                                    {artist.name}
+                                </Link>
+                                {index < item.songId.artist.length - 1 && ", "}
+                                </span>
+                            ))}
+                            </p>
                        </div>
                        <div className="play-button">
                            <PlayCircleOutlined />
