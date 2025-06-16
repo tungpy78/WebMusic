@@ -18,7 +18,13 @@ function Login(){
             
             toast.success(response.data.message ?? "Login success!");
 
-            navigate("/");
+            const role = response.data.payload.role;
+
+            if (role === "Admin") {
+                navigate("/admin/dashboard");
+            } else {
+                navigate("/");
+            }
         } catch (error) {
             console.log("error", error);
         }

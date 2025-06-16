@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const API_DOMAIN = "http://localhost:5000/";
+const API_DOMAIN = "http://localhost:5000";
 
 let authorizedAxiosInstance = axios.create({
     baseURL: API_DOMAIN,
@@ -26,6 +26,12 @@ export const post = async (path: string, data: Object) => {
   const response = await authorizedAxiosInstance.post(path, data);
   return response;
 };
+
+export const postFormData = async (path: string, data: any, config = {}) => {
+    const response = await authorizedAxiosInstance.post(path, data, config);
+    return response;
+};
+
 export const put = async (path: string, data: Object) => {
   const response = await authorizedAxiosInstance.put(path, data);
   return response;
@@ -36,11 +42,17 @@ export const del = async (path: string) => {
   return response;
 };
 
+
+
 export const patch = async (path: string, data: Object) => {
   const response = await authorizedAxiosInstance.patch(path, data);
   return response;
 };
 
+export const patchFormData = async (path: string, data: any, config = {}) => {
+    const response = await authorizedAxiosInstance.patch(path, data, config);
+    return response;
+};
 
 // Add a request interceptor
 authorizedAxiosInstance.interceptors.request.use((config) => {
