@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './LayoutAdmin.scss';
 import './fontawesome';
 import {Outlet, useLocation, useNavigate} from 'react-router-dom';
@@ -22,6 +22,7 @@ const LayoutAdmin = () => {
     const [openRoleAccount, setOpenRoleAccount] = useState(false);
     // Khai báo biến state isCollapsed
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const path = location.pathname;
@@ -86,6 +87,30 @@ const LayoutAdmin = () => {
         setSelectedItem(id);
     };
 
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    const handleLogout = () => {
+        localStorage.removeItem("user");
+        navigate("/login");
+    };
+
+    const handleProfile = () => {
+        navigate("/profile");
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setShowDropdown(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     return (
         <div className="admin-layout">
             <header className="admin-header">
@@ -107,10 +132,23 @@ const LayoutAdmin = () => {
 
                     <div className="admin-header__right">
                         <FontAwesomeIcon icon={['far', 'bell']} className="admin-header__bell"/>
-                        <div className="admin-header__person">
+                        <div
+                            className="admin-header__person"
+                            onClick={() => setShowDropdown(prev => !prev)}
+                        >
                             <img src="/avatar_admin.png" alt="Avatar" className="admin-header__avatar"/>
                             <div className="admin-header__name">John Doe</div>
                             <FontAwesomeIcon icon={['fas', 'caret-down']} className="admin-header__caret"/>
+                            {showDropdown && (
+                                <div className="admin-header__dropdown" ref={dropdownRef}>
+                                    <div className="admin-header__dropdown-item" onClick={handleProfile}>
+                                        Hồ sơ
+                                    </div>
+                                    <div className="admin-header__dropdown-item" onClick={handleLogout}>
+                                        Đăng xuất
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

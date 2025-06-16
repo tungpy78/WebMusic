@@ -111,6 +111,28 @@
   font-size: 12px;
 }
 
+.admin-header__dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.admin-header__dropdown-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.admin-header__dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+
 //body
 .admin-body {
   position: relative;
