@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-
-// =================================================================
-// === PHẦN 1: ĐỊNH NGHĨA KIỂU DỮ LIỆU & CSS (TYPES & STYLES) ========
-// =================================================================
-
-// --- Component chứa Style CSS (Đã được bổ sung style cho Modal và Form) ---
+import React, { useEffect, useState } from 'react';
+import { changeSong, createAlbum, getAlbum, updateAlbum } from '../../Services/album.service';
+import { AlbumRequest, AlbumResponsor, Artist, Song } from '../../models/album.model';
+import { getAllSong, getSongsByArtist } from '../../Services/song.service';
+import { getArtist } from '../../Services/artist.service';
+import Select from 'react-select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const AlbumStyles = () => (
     <style>
         {`
@@ -70,172 +70,195 @@ const AlbumStyles = () => (
         `}
     </style>
 );
+const inputStyle: React.CSSProperties = {
+  padding: '10px 14px',
+  fontSize: '16px',
+  borderRadius: '6px',
+  border: '1px solid #ccc',
+  outline: 'none',
+};
 
+const cancelBtnStyle: React.CSSProperties = {
+  padding: '10px 18px',
+  backgroundColor: '#e0e0e0',
+  border: 'none',
+  borderRadius: '6px',
+  fontSize: '15px',
+  cursor: 'pointer'
+};
 
-// --- Định nghĩa kiểu dữ liệu (Đã được mở rộng) ---
-interface SongType {
-    id: number;
-    name: string;
-    artist: string;
-}
-
-interface AlbumType {
-    id: number;
-    name: string;
-    artist: string;
-    avatarUrl: string;
-    description?: string;
-    releaseDate?: string;
-    songs?: SongType[];
-}
-
-
-// =================================================================
-// === PHẦN 2: DỮ LIỆU GIẢ (MOCK DATA) ============================
-// =================================================================
-
-const initialMockAlbums: AlbumType[] = [
-    { id: 1, name: 'Trạm Cảm Xúc', artist: 'Hoàng Dũng', avatarUrl: 'https://i.scdn.co/image/ab67616d0000b2737c39049a4604b7b2520550c3' },
-    { id: 2, name: 'dreAMEE', artist: 'AMEE', avatarUrl: 'https://i.scdn.co/image/ab67616d0000b273d49265147c21e3d64993132d' },
-    { id: 3, name: '25', artist: 'Hoàng Dũng', avatarUrl: 'https://i.scdn.co/image/ab67616d0000b2731833e72082b2d0752a78f5f1' },
-    { id: 4, name: 'Lof-Fi', artist: 'Nhiều nghệ sĩ', avatarUrl: 'https://i.scdn.co/image/ab67706c0000da845cf45347f0354b6732766624' },
-];
-
-const allAvailableSongs: SongType[] = [
-    { id: 101, name: "Nàng Thơ", artist: "Hoàng Dũng" },
-    { id: 102, name: "Đoạn Kết Mới", artist: "Hoàng Dũng" },
-    { id: 103, name: "Anh Đã Quen Với Cô Đơn", artist: "Soobin Hoàng Sơn" },
-    { id: 104, name: "Tình Yêu Màu Nắng", artist: "Đoàn Thúy Trang" },
-    { id: 105, name: "Ex's Hate Me", artist: "B Ray, AMEE" },
-    { id: 106, name: "Anh Nhà Ở Đâu Thế", artist: "AMEE" },
-];
-
-
-// =================================================================
-// === PHẦN 3: COMPONENT MODAL THÊM ALBUM (AddAlbumModal) ==========
-// =================================================================
-
-interface AddAlbumModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onSave: (newAlbumData: Omit<AlbumType, 'id'>) => void;
-}
-
-const AddAlbumModal = ({ isOpen, onClose, onSave }: AddAlbumModalProps): React.JSX.Element | null => {
-    const [name, setName] = useState('');
-    const [artist, setArtist] = useState('');
-    const [avatarUrl, setAvatarUrl] = useState('');
-    const [description, setDescription] = useState('');
-    const [releaseDate, setReleaseDate] = useState('');
-    const [selectedSongs, setSelectedSongs] = useState<SongType[]>([]);
-    const [isSongDropdownOpen, setIsSongDropdownOpen] = useState(false);
-
-    if (!isOpen) return null;
-
-    const handleSongToggle = (song: SongType) => {
-        if (selectedSongs.some(s => s.id === song.id)) {
-            setSelectedSongs(selectedSongs.filter(s => s.id !== song.id));
-        } else {
-            setSelectedSongs([...selectedSongs, song]);
-        }
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!name || !artist) {
-            alert('Vui lòng điền Tên Album và Tên Nghệ sĩ!');
-            return;
-        }
-        onSave({ name, artist, avatarUrl, description, releaseDate, songs: selectedSongs });
-        setName(''); setArtist(''); setAvatarUrl(''); setDescription(''); setReleaseDate(''); setSelectedSongs([]);
-        onClose();
-    };
-
-    return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <form onSubmit={handleSubmit}>
-                    <div className="modal-header"><h3>Thêm Album Mới</h3></div>
-                    <div className="modal-body">
-                        <div className="form-group"><label>Tên Album*</label><input type="text" value={name} onChange={(e) => setName(e.target.value)} required /></div>
-                        <div className="form-group"><label>Tên Nghệ Sĩ*</label><input type="text" value={artist} onChange={(e) => setArtist(e.target.value)} required /></div>
-                        <div className="form-group"><label>Link Avatar</label><input type="text" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} /></div>
-                        <div className="form-group"><label>Mô tả</label><textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3}></textarea></div>
-                        <div className="form-group"><label>Ngày Ra Mắt</label><input type="date" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} /></div>
-                        <div className="form-group">
-                            <label>Chọn Bài Hát</label>
-                            <div className="custom-select-container">
-                                <div className="select-input" onClick={() => setIsSongDropdownOpen(!isSongDropdownOpen)}>
-                                    {selectedSongs.length === 0 && <span style={{color: '#888'}}>Nhấn để chọn bài hát...</span>}
-                                    {selectedSongs.map(song => (
-                                        <span key={song.id} className="selected-song-pill">
-                                            {song.name}
-                                            <span className="pill-remove-btn" onClick={(e) => { e.stopPropagation(); handleSongToggle(song); }}>×</span>
-                                        </span>
-                                    ))}
-                                </div>
-                                {isSongDropdownOpen && (
-                                    <div className="select-dropdown">
-                                        {allAvailableSongs.map(song => (
-                                            <div key={song.id} className={`select-dropdown-item ${selectedSongs.some(s => s.id === song.id) ? 'selected' : ''}`} onClick={() => handleSongToggle(song)}>
-                                                {song.name} - <em style={{fontSize: '0.9em', color: '#666'}}>{song.artist}</em>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" onClick={onClose}>Hủy</button>
-                        <button type="submit" className="btn btn-primary">Lưu</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    );
+const saveBtnStyle: React.CSSProperties = {
+  padding: '10px 18px',
+  backgroundColor: '#4CAF50',
+  color: 'white',
+  border: 'none',
+  borderRadius: '6px',
+  fontSize: '15px',
+  cursor: 'pointer'
 };
 
 
-// =================================================================
-// === PHẦN 4: COMPONENT CHÍNH (ALBUM) =============================
-// =================================================================
 
-const Album = (): React.JSX.Element => {
-    // State để quản lý danh sách album và trạng thái modal
-    const [albums, setAlbums] = useState<AlbumType[]>(initialMockAlbums);
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-    // Hàm xử lý khi lưu album mới từ modal
-    const handleSaveAlbum = (newAlbumData: Omit<AlbumType, 'id'>) => {
-        const newAlbum: AlbumType = {
-            id: Date.now(), // Tạo ID duy nhất bằng timestamp
-            ...newAlbumData,
+const Album = () => {
+    const [showForm, setShowForm] = useState(false);
+    const [showFormDetail,setShowFormDetail] = useState(false);
+    const [showFormAddSong,setShowFormAddSong] = useState(false);
+
+    const [albums, setAlbums] = useState<AlbumResponsor[]>([]);
+    const [albumId,setAlbumId] = useState<string>('');
+    const [albumName, setAlbumName] = useState<string>('');
+    const [decription, setDecription] = useState<string>('');
+    const [releaseDay, setReleaseDay] = useState<string>(''); 
+    const [avatar, setAvatar] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);   
+    const [artistId, setArtistId] = useState<string>('');  
+    const [songIds, setSongIds] = useState<string[]>([]);
+    const [iscreate, setiscreate] = useState<boolean>(false);
+    useEffect(() => {
+                    const fethApi = async () => {
+                        try {
+                            const result = await getAlbum();
+                            setAlbums(result?.data);
+                            const resultArtist = await getArtist();
+                            setAllAvailableArtist(resultArtist?.data);
+                            console.error(result?.data);
+                        } catch (error) {
+                            console.log("errortopic", error);
+                        }
+                    }
+                    fethApi();
+                },[]);
+
+    const [allAvailableSongs, setAllAvailableSongs] = useState<Song[]>([]);
+    const [allAvailableArtist, setAllAvailableArtist] = useState<Artist[]>([]);
+    const [artistForAlbum,setArtistForAlbum] = useState<Artist>();
+    const [allAvailableSongsRequest, setAllAvailableSongsRequest] = useState<Song[]>([]);
+
+    const songOptions = allAvailableSongs.map(song => ({
+        value: song._id,
+        label: song.title,
+    }));
+
+    const setdatasong = async(artist_id: string) =>{
+        if(!artist_id){
+             setAllAvailableSongs([]);
+        }else{
+            const result = await getSongsByArtist(artist_id);
+            setAllAvailableSongs(result?.data);
+        }
+        
+    }
+
+    const handleSaveAlbum = async() => {
+        const newAlbum: AlbumRequest = {
+            album_name: albumName,
+            decription: decription,
+            release_day: releaseDay,
+            avatar: avatar,
+            artist: artistId,
+            songs: songIds,
         };
-        setAlbums(prevAlbums => [newAlbum, ...prevAlbums]);
-        setIsModalOpen(false);
-        alert(`Đã thêm thành công album "${newAlbum.name}"!`);
+
+        try {
+            if(iscreate){
+                await createAlbum(newAlbum);
+                alert('Tạo thành công!');
+            }else{              
+                await updateAlbum(albumId,newAlbum);
+                alert('update thành công!');
+            }
+            const updatedResult = await getAlbum();
+            setAlbums(updatedResult.data);
+            clearForm();
+            setShowForm(false);
+            setiscreate(false);
+        } catch (err) {
+            console.error(err);
+            alert('Tạo thất bại:' + err);
+        }
     };
 
-    // Các hàm xử lý sự kiện cũ
-    const handleViewDetails = (albumId: number) => alert(`Xem chi tiết album ID = ${albumId}`);
-    const handleAddSong = (albumId: number) => alert(`Thêm bài hát vào album ID = ${albumId}`);
-    const handleEditAlbum = (albumId: number) => alert(`Sửa album ID = ${albumId}`);
+    const clearForm = () => {
+        setAlbumId('');
+        setAlbumName('');
+        setDecription('');
+        setReleaseDay('');
+        setAvatar(null);
+        setImagePreview(null);
+        setArtistId('');
+        setSongIds([]);
+    };
+
+    // xem chi tiết 
+    const handleViewDetails = (album: AlbumResponsor) => {
+        setAlbumName(album.album_name);
+        setDecription(album.decription);
+        setReleaseDay(album.release_day);
+        setImagePreview(album.avatar);
+        setArtistForAlbum(album.artist);
+        setAllAvailableSongs(album.songs);
+
+    };
+
+    //thêm bài hát
+    const handleAddSong = async(album: AlbumResponsor) => {
+        setAlbumName(album.album_name);
+        setArtistForAlbum(album.artist);
+        setAllAvailableSongsRequest(album.songs);
+        const result = await getSongsByArtist(album.artist._id);
+        // Lọc bỏ các bài hát đã có trong album.songs
+        const filteredSongs = result?.data.filter(
+            (song: Song) => !album.songs.some((s: Song) => s._id === song._id)
+        );
+        setAllAvailableSongs(filteredSongs);
+    };
+
+    const handleRemoveSong = async(song: Song)=>{
+        setAllAvailableSongsRequest(prev => prev.filter(s => s._id !== song._id));
+        setSongIds(prev => prev.filter(id => id !== song._id));
+        // Thêm lại vào danh sách có thể chọn
+        setAllAvailableSongs(prev => {
+            // Kiểm tra nếu chưa tồn tại thì thêm vào
+            const alreadyExists = prev.some(s => s._id === song._id);
+            return alreadyExists ? prev : [...prev, song];
+        });
+    }
+
+    const handleSaveSong = async()=>{
+        try {
+        const newSongIds = allAvailableSongsRequest.map(song => song._id);
+        await changeSong(newSongIds, albumId);
+        const result = await getAlbum();
+        setAlbums(result?.data);
+        alert("Lưu bài hát thành công.");
+        setShowFormAddSong(false); 
+        clearForm();
+        } catch (err) {
+        console.error("Lỗi khi lưu bài hát:", err);
+        alert("Đã xảy ra lỗi. Không thể lưu bài hát.");
+        }
+    }
+    //Chỉnh sửa album
+    const handleEditAlbum = (album: AlbumResponsor) => {
+        setAlbumName(album.album_name);
+        setDecription(album.decription);
+        setArtistId(album.artist._id)
+        const date = new Date(album.release_day);
+        const formattedDate = date.toISOString().split('T')[0];
+        setReleaseDay(formattedDate);
+        setImagePreview(album.avatar);
+    };
 
     return (
         <>
             <AlbumStyles />
-            <AddAlbumModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onSave={handleSaveAlbum}
-            />
 
             <div className="album-container">
                 <div className="album-header">
                     <h2>Quản lý Album</h2>
                     {/* Nút này bây giờ sẽ mở modal */}
-                    <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
+                    <button className="btn btn-primary" onClick={() => {setShowForm(true);setiscreate(true);}}>
                         + Thêm Album
                     </button>
                 </div>
@@ -253,22 +276,22 @@ const Album = (): React.JSX.Element => {
                     <tbody>
                     {/* Render danh sách album từ state */}
                     {albums.map((album, index) => (
-                        <tr key={album.id}>
+                        <tr key={album._id}>
                             <td>{index + 1}</td>
                             <td>
                                 <img
-                                    src={album.avatarUrl || 'https://via.placeholder.com/60'} // Ảnh mặc định nếu không có
-                                    alt={album.name}
+                                    src={album.avatar || 'https://via.placeholder.com/60'} // Ảnh mặc định nếu không có
+                                    alt={'album avata'}
                                     className="album-avatar"
                                 />
                             </td>
-                            <td>{album.name}</td>
-                            <td>{album.artist}</td>
+                            <td>{album.album_name}</td>
+                            <td>{album.artist.name}</td>
                             <td>
                                 <div className="action-buttons">
-                                    <button className="btn btn-info" onClick={() => handleViewDetails(album.id)}>Xem</button>
-                                    <button className="btn btn-success" onClick={() => handleAddSong(album.id)}>Thêm bài hát</button>
-                                    <button className="btn btn-warning" onClick={() => handleEditAlbum(album.id)}>Sửa</button>
+                                    <button className="btn btn-info" onClick={() => {handleViewDetails(album);setShowFormDetail(true)}}>Xem</button>
+                                    <button className="btn btn-success" onClick={() => {handleAddSong(album);setShowFormAddSong(true);setAlbumId(album._id)}}>Thêm bài hát</button>
+                                    <button className="btn btn-warning" onClick={() => {handleEditAlbum(album);setShowForm(true);setiscreate(false);setAlbumId(album._id)}}>Sửa</button>
                                 </div>
                             </td>
                         </tr>
@@ -276,6 +299,397 @@ const Album = (): React.JSX.Element => {
                     </tbody>
                 </table>
             </div>
+
+
+
+            {/* form add */}
+            {showForm && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 1010
+                }}>
+                    <div style={{
+                    width: '100%',
+                    maxWidth: '600px',
+                    backgroundColor: '#fff',
+                    borderRadius: '12px',
+                    padding: '24px',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '16px'
+                    }}>
+                    <h2 style={{ margin: 0, textAlign: 'center' }}>
+                        {iscreate ? 'Tạo album mới' : 'Chỉnh sửa album'}
+                    </h2>
+
+                    <input
+                        type="text"
+                        placeholder="Tên album"
+                        value={albumName}
+                        onChange={(e) => setAlbumName(e.target.value)}
+                        style={inputStyle}
+                    />
+
+                    <textarea
+                        placeholder="Mô tả"
+                        value={decription}
+                        onChange={(e) => setDecription(e.target.value)}
+                        rows={3}
+                        style={inputStyle}
+                    />
+
+                    <input
+                        type="date"
+                        value={releaseDay}
+                        onChange={(e) => setReleaseDay(e.target.value)}
+                        style={inputStyle}
+                    />
+
+                    <select
+                        value={artistId}
+                        onChange={(e) => {
+                            const selectedId = e.target.value;
+                            setArtistId(selectedId);       
+                            setSongIds([]);                
+                            setdatasong(selectedId);    
+                        }}
+                        style={inputStyle}
+                        >
+                        <option value="">-- Chọn nghệ sĩ --</option>
+                        {allAvailableArtist.map((artist) => (
+                            <option key={artist._id} value={artist._id}>
+                            {artist.name}
+                            </option>
+                        ))}
+                    </select>
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                            setAvatar(file);
+                            setImagePreview(URL.createObjectURL(file));
+                        }
+                        }}
+                        style={{ padding: '10px 0', fontSize: '16px' }}
+                    />
+                    {imagePreview && (
+                        <img
+                        src={imagePreview}
+                        alt="preview"
+                        style={{
+                            width: '100%',
+                            maxHeight: '200px',
+                            objectFit: 'cover',
+                            borderRadius: '8px',
+                            marginTop: '8px'
+                        }}
+                        />
+                    )}
+
+                    {/* Danh sách bài hát để chọn */}
+                    {iscreate && (
+                        <Select
+                            isMulti
+                            value={songOptions.filter(option => songIds.includes(option.value))}
+                            onChange={(selectedOptions) => {
+                                const selectedIds = (selectedOptions || []).map(option => option.value);
+                                setSongIds(selectedIds);
+                            }}
+                            options={songOptions}
+                        />
+                    )}
+                    
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                        <button onClick={() => { setShowForm(false); clearForm(); }} style={cancelBtnStyle}>
+                        Hủy
+                        </button>
+                        <button onClick={handleSaveAlbum} style={saveBtnStyle}>
+                        Lưu
+                        </button>
+                    </div>
+                    </div>
+                </div>
+                )}
+            {/* form details */}
+            {showFormDetail && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 1010
+                }}>
+                    <div style={{
+                        width: '100%',
+                        maxWidth: '700px',
+                        maxHeight: '90vh',           // Giới hạn chiều cao
+                        overflowY: 'auto',           // Hiện thanh cuộn dọc nếu vượt quá
+                        backgroundColor: '#fff',
+                        borderRadius: '12px',
+                        padding: '24px',
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px'
+                    }}>
+                    <h2 style={{ margin: 0, textAlign: 'center' }}>
+                        Chi tiết album
+                    </h2>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '-5px' }}>
+                        <p><strong>Ảnh đại diện:</strong></p>
+                        {imagePreview && (
+                            <img
+                            src={imagePreview}
+                            alt="preview"
+                            style={{
+                                width: '100%',
+                                maxHeight: '200px',
+                                objectFit: 'cover',
+                                borderRadius: '8px',
+                                marginTop: '8px'
+                            }}
+                            />
+                        )}
+                        <p><strong>Tên album:</strong> {albumName}</p>
+                        <p><strong>Mô tả:</strong> {decription}</p>
+                        <p>
+                            <strong>Ngày phát hành:</strong>{' '}
+                            {releaseDay ? new Date(releaseDay).toLocaleDateString('vi-VN') : 'Không rõ'}
+                        </p>
+                        <p>
+                            <strong>Nghệ sĩ:</strong> 
+                            <table className="album-table">
+                                <thead>
+                                    <tr>
+                                    <th>STT</th>
+                                    <th>Avatar</th>
+                                    <th>Tên nghệ sĩ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr key={artistForAlbum!._id}>
+                                    <td>1</td> {/* STT cố định hoặc truyền từ props */}
+                                    <td>
+                                        <img
+                                        src={artistForAlbum!.imageUrl || 'https://via.placeholder.com/60'}
+                                        alt="album avatar"
+                                        className="album-avatar"
+                                        />
+                                    </td>
+                                    <td>{artistForAlbum!.name}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </p>
+
+                        <div>
+                                <strong>Bài hát:</strong>
+                                <table className="album-table">
+                            <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Avatar</th>
+                                <th>Tên bài hát</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {/* Render danh sách album từ state */}
+                            {allAvailableSongs.map((song, index) => (
+                                <tr key={song._id}>
+                                    <td>{index + 1}</td>
+                                    <td>
+                                        <img
+                                            src={song.avatar || 'https://via.placeholder.com/60'} // Ảnh mặc định nếu không có
+                                            alt={'album avata'}
+                                            className="album-avatar"
+                                        />
+                                    </td>
+                                    <td>{song.title}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                        <button onClick={() => { setShowFormDetail(false); clearForm(); }} style={cancelBtnStyle}>
+                        Đóng
+                        </button>
+                    </div>
+                    </div>
+                </div>
+                )}
+            {/* form add song to album */}
+            {showFormAddSong && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 1010
+                }}>
+                    <div style={{
+                        width: '100%',
+                        maxWidth: '700px',
+                        maxHeight: '90vh',           // Giới hạn chiều cao
+                        overflowY: 'auto',           // Hiện thanh cuộn dọc nếu vượt quá
+                        backgroundColor: '#fff',
+                        borderRadius: '12px',
+                        padding: '24px',
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px'
+                    }}>
+                    <h2 style={{ margin: 0, textAlign: 'center' }}>
+                        Thêm bài hát vào album 
+                    </h2>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '-5px' }}>
+                        <p><strong>Tên album:</strong> {albumName}</p>
+                        <p>
+                            <strong>Nghệ sĩ:</strong> 
+                            <table className="album-table">
+                                <thead>
+                                    <tr>
+                                    <th>STT</th>
+                                    <th>Avatar</th>
+                                    <th>Tên nghệ sĩ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr key={artistForAlbum!._id}>
+                                    <td>1</td> {/* STT cố định hoặc truyền từ props */}
+                                    <td>
+                                        <img
+                                        src={artistForAlbum!.imageUrl || 'https://via.placeholder.com/60'}
+                                        alt="album avatar"
+                                        className="album-avatar"
+                                        />
+                                    </td>
+                                    <td>{artistForAlbum!.name}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </p>
+
+                        <div>
+                    <strong>Bài hát:</strong>
+                    <table className="album-table">
+                        <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Avatar</th>
+                            <th>Tên bài hát</th>
+                            <th>Hành Động</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {allAvailableSongsRequest.map((song, index) => (
+                            <tr key={song._id}>
+                            <td>{index + 1}</td>
+                            <td>
+                                <img
+                                src={song.avatar || 'https://via.placeholder.com/60'}
+                                alt="album avatar"
+                                className="album-avatar"
+                                style={{ width: '60px', borderRadius: '8px' }}
+                                />
+                            </td>
+                            <td>{song.title}</td>
+                            <td>
+                                <button
+                                onClick={() => {handleRemoveSong(song)}}
+                                style={{
+                                    padding: '6px 12px',
+                                    backgroundColor: 'transparent',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer'
+                                }}
+                                >
+                                <FontAwesomeIcon
+                                    icon={['fas',   'trash']}
+                                    style={{
+                                    color:  '#f44336',
+                                    transition: 'transform 0.2s ease, color 0.2s ease',
+                                    cursor: 'pointer'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1.2)';
+                                    e.currentTarget.style.color =  '#b71c1c';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform ='scale(1)';
+                                    e.currentTarget.style.color = '#f44336';
+                                    }}
+                                />
+                                </button>
+                            </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                    </div>
+                    <Select
+                            isMulti
+                            value={songOptions.filter(option => songIds.includes(option.value))}
+                            onChange={(selectedOptions) => {
+                                const selectedIds = (selectedOptions || []).map(option => option.value);
+                                const newlyAddedId = selectedIds.find(id => !songIds.includes(id));                                
+                                if (newlyAddedId) {
+                                    const newSong = allAvailableSongs.find(song => song._id === newlyAddedId);
+                                    if (newSong) {
+                                    setAllAvailableSongsRequest(prev => [...prev, newSong]);
+                                    }
+                                }
+
+                                setSongIds(selectedIds);
+                                }}
+                            options={songOptions}
+                            components={{
+                                    MultiValue: () => null, 
+                                    MultiValueRemove: () => null, 
+                                    ClearIndicator: () => null, 
+                                }}
+                        />
+                    </div>                   
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                        <button onClick={() => { setShowFormAddSong(false); clearForm(); }} style={cancelBtnStyle}>
+                        Đóng
+                        </button>
+                        <button onClick={()=> {handleSaveSong()}} style={saveBtnStyle}>
+                        Lưu
+                        </button>
+                    </div>
+                    </div>
+                </div>
+            )}
+
+
         </>
     );
 };
