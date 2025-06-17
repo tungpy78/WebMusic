@@ -1,11 +1,5 @@
 import { get, post } from "../Utils/authorizedAxios";
 
-
-export const getAllSong = async () => {
-    const result = await get('song');
-    return result;
-}
-
 export const getSongsByArtist = async(artist_id: string) =>{
     const result = await get(`song/artist/${artist_id}`);
     return result;
