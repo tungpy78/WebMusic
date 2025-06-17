@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { changeSong, createAlbum, getAlbum, updateAlbum } from '../../Services/album.service';
-import { AlbumRequest, AlbumResponsor, Artist, Song } from '../../models/album.model';
+import { AlbumRequest, AlbumResponsor, ArtistAdmin, SongAdmin } from '../../models/album.model';
 import { getAllSong, getSongsByArtist } from '../../Services/song.service';
 import { getArtist } from '../../Services/artist.service';
 import Select from 'react-select';
@@ -130,10 +130,10 @@ const Album = () => {
                     fethApi();
                 },[]);
 
-    const [allAvailableSongs, setAllAvailableSongs] = useState<Song[]>([]);
-    const [allAvailableArtist, setAllAvailableArtist] = useState<Artist[]>([]);
-    const [artistForAlbum,setArtistForAlbum] = useState<Artist>();
-    const [allAvailableSongsRequest, setAllAvailableSongsRequest] = useState<Song[]>([]);
+    const [allAvailableSongs, setAllAvailableSongs] = useState<SongAdmin[]>([]);
+    const [allAvailableArtist, setAllAvailableArtist] = useState<ArtistAdmin[]>([]);
+    const [artistForAlbum,setArtistForAlbum] = useState<ArtistAdmin>();
+    const [allAvailableSongsRequest, setAllAvailableSongsRequest] = useState<SongAdmin[]>([]);
 
     const songOptions = allAvailableSongs.map(song => ({
         value: song._id,
@@ -209,12 +209,12 @@ const Album = () => {
         const result = await getSongsByArtist(album.artist._id);
         // Lọc bỏ các bài hát đã có trong album.songs
         const filteredSongs = result?.data.filter(
-            (song: Song) => !album.songs.some((s: Song) => s._id === song._id)
+            (song: SongAdmin) => !album.songs.some((s: SongAdmin) => s._id === song._id)
         );
         setAllAvailableSongs(filteredSongs);
     };
 
-    const handleRemoveSong = async(song: Song)=>{
+    const handleRemoveSong = async(song: SongAdmin)=>{
         setAllAvailableSongsRequest(prev => prev.filter(s => s._id !== song._id));
         setSongIds(prev => prev.filter(id => id !== song._id));
         // Thêm lại vào danh sách có thể chọn

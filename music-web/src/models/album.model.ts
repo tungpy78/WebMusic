@@ -1,10 +1,23 @@
-export type Artist = {
+import { Artist, Song } from "./song.model";
+
+
+export interface Album {
+    _id: string;
+    songs: Song[];
+    avatar: string;
+    artist: Artist;
+    album_name: string;
+    description: string;
+    release_day: string;
+}
+
+export type ArtistAdmin = {
   _id: string;
   name: string;
   imageUrl: string;
 };
 
-export type Song = {
+export type SongAdmin = {
   _id: string;
   title: string;
   avatar: string;
@@ -16,8 +29,8 @@ export type AlbumResponsor = {
     decription: string;
     release_day: string;
     avatar: string;
-    artist: Artist;
-    songs: Song[];
+    artist: ArtistAdmin;
+    songs: SongAdmin[];
 };
 
 export type AlbumRequest ={
