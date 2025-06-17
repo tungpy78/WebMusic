@@ -123,9 +123,9 @@ authorizedAxiosInstance.interceptors.response.use((response) => {
         });
     }
 
-    if (error.response.status !== 410) {
-      console.log("error", error.response.data.message);
-      toast.error(error.response.data.message || error.message);
+    if (error.response?.status !== 410) {
+      console.log("error", error.response?.data?.message);
+      toast.error(error.response?.data?.message || error.message);
       
     }
 

@@ -32,7 +32,7 @@ function TopicMusic(){
             <Row gutter={[20, 20]} className="topic__list">
                 {topics.map((item) => (
                     <Col key={item._id} xs={24} sm={12} md={12} lg={8} xl={6}>
-                        <div className="topic__item">
+                        <div className="topic__item" style={{ height: "100%" }}>
                             <div className="topic__item--image">
                                 <img src={item.avatar} alt={item.title} />
                             </div>

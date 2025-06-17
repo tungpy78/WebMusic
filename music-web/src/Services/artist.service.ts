@@ -40,3 +40,8 @@ export const updateArtist = async(artistId: string,artistRequest: ArtistRequest)
     });
     return result;
 }
+
+export const getArtistById = async (artistId: string) => {
+    const result = await get(`artist/${artistId}`);
+    return result;
+}

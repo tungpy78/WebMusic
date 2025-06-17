@@ -1,0 +1,31 @@
+.rank__item{
+    position: relative;
+    transition: transform 0.3s ease;
+    &:hover{
+    transform: scale(1.05);
+    background-color: #2F2739;
+    }
+    .play-button {
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        font-size: 20px;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none; // nếu chỉ muốn hiển thị icon
+   }
+   &:hover .play-button {
+        opacity: 1;
+    }
+    .rank--artist:hover{
+        text-decoration: underline;
+    }
+}

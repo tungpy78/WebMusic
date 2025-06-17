@@ -13,7 +13,7 @@ function HintMusic(){
         }
         fetchApi();
     },[])
-
+    console.log("history",history);
     return (
         <>
         <h2>Gợi ý cho bạn</h2>
@@ -24,8 +24,15 @@ function HintMusic(){
                         <img src={item.songId.avatar} alt={item.songId.title} />
                     </div>
                     <div className="inner__item--title">
-                        <h4>{item.songId.artist.name}</h4>
-                        <p>{item.songId.title}</p>
+                        <h4>{item.songId.title}</h4>
+                        <p>
+                        {item.songId.artist.map((artist, index) => (
+                            <span key={artist._id}>
+                                <Link to={`/artist/${artist._id}`}>{artist.name}</Link>
+                                {index < item.songId.artist.length - 1 && ", "}
+                            </span>
+                        ))}
+                        </p>
                     </div>
                     <div className="play-button">
                         <PlayCircleOutlined />

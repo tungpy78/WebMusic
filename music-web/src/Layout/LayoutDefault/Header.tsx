@@ -81,7 +81,9 @@ function HeaderLayout(){
                 <img src={song.avatar} alt={song.title} style={{ width: 40, height: 40, marginRight: 10 }} />
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <strong>{song.title}</strong>
-                    <small>{song.artist?.name}</small>
+                    {song.artist.map((artist) => (
+                      <small>{artist?.name}</small>
+                    ))}
                 </div>
             </div>
             </Link>

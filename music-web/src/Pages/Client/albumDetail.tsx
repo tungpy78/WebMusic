@@ -8,39 +8,43 @@ import APlayer from "aplayer"
 import 'aplayer/dist/APlayer.min.css'; // Import CSS của APlayer
 import "../../assets/scss/playlistdetail.scss"
 import { DeleteOutlined } from "@ant-design/icons"
+import { getAlbumById } from "../../Services/album.service"
+import { Album } from "../../models/album.model"
+import { Link } from "react-router-dom"
 
 
-function PlayListDetail() {
+function AlbumDetail() {
    const param = useParams()
-   const playlistId = param.playlistId as string
-   const [dataPlayList, setDataPlayList] = useState<Playlist1 | null>(null);
+   const albumId = param.albumId as string
+   const [dataAlbum, setDataAlbum] = useState<Album | null>(null);
    const playerRef = useRef<InstanceType<typeof APlayer> | null>(null);
    const [isPlaying, setIsPlaying] = useState(false);
    const aplayerContainerRef = useRef<HTMLDivElement>(null);
 
 
    const fetchApi = async () => {
-    const response = await getPlayListDetail(playlistId)
-    setDataPlayList(response.data)
+    const response = await getAlbumById(albumId)
+    setDataAlbum(response.data)
     }
 
    useEffect(() => {
     fetchApi()
    },[])  
-   console.log(dataPlayList)
+
+   console.log("dataAlbum", dataAlbum)
+   console.log("album song", dataAlbum?.songs[0]?.audio)
    
+
    useEffect(() => {
-    if (dataPlayList && dataPlayList.songs.length > 0 && aplayerContainerRef.current) {
-        
+    if (dataAlbum && dataAlbum.songs.length > 0 && aplayerContainerRef.current) {
+
       const player = new APlayer({
         element: aplayerContainerRef.current,
-        audio: dataPlayList.songs.map((song) => ({
-          name: song?.songId.title,
-          artist: Array.isArray(song?.songId.artist)
-          ? song.songId.artist.map((a) => a.name).join(", ")
-          : "Unknown Artist",
-          url: song?.songId.audio,
-          cover: song?.songId.avatar,
+        audio: dataAlbum.songs.map((song) => ({
+          name: song.title,
+          artist: song.artist.map((a) => a.name).join(", "),
+          url: song.audio,
+          cover: song.avatar, 
         })),
         autoplay:true,
       });
@@ -63,7 +67,7 @@ function PlayListDetail() {
       // Cleanup the player when component unmounts or data changes
       
     }
-  }, [dataPlayList?.songs]);
+  }, [dataAlbum?.songs]);
 
 
   const handlePlay = () => {
@@ -78,28 +82,23 @@ function PlayListDetail() {
             setIsPlaying(true);
         }
   }
-  const handleRemove = async (songId: string, playlistId:string) => {
-    await removeSongPlayList(songId, playlistId)
-    fetchApi()
-  }
-  console.log("dataPlayList", dataPlayList)
 
     
    
     return (
         <> 
         <ToastContainer />
-        {dataPlayList ? (
-                dataPlayList.songs.length === 0 ? (
+        {dataAlbum ? (
+                dataAlbum.songs.length === 0 ? (
                     <><h1>Danh sách trống</h1></>
                 ) : (
                     <Row gutter={[10,10]}>
                         <Col span={6} style={{ textAlign: "center" }}>
                             <div className="playlist-image">
-                                <img src={dataPlayList.songs[0].songId.avatar} alt={dataPlayList.name} />
+                                <img src={dataAlbum.avatar} alt={dataAlbum.album_name} />
                             </div>
-                            <h3>{dataPlayList.name}</h3>
-                            <p>Tạo bởi {dataPlayList.userFullname || "Unknown"}</p>
+                            <h3>{dataAlbum.album_name}</h3>
+                            <Link  to={`/artist/${dataAlbum.artist._id}`}><p>{dataAlbum.artist?.name}</p></Link>
                             <Button onClick={handlePlay}>{isPlaying ? "Tạm dừng" : "Phát tất cả"}</Button>
                         </Col>
                         <Col span={17}>
@@ -107,11 +106,11 @@ function PlayListDetail() {
                             ref={aplayerContainerRef}
                             style={{ padding: "5px", background: "#170F23", border: "1px solid #231B2E" }}
                             />
-                        </Col>
-                        <Col span={1} style={dataPlayList.songs.length > 1 ? { marginTop: "80px" } : {marginTop: "30px"}}>
-                            {dataPlayList.songs.map((item,index) => (
-                                <Button onClick={() => handleRemove(item.songId._id,dataPlayList._id)} key={index} danger><DeleteOutlined /></Button>
-                            ))}
+                            <div style={{ marginLeft: "10px" }}>
+                                <h3>Thông tin</h3>
+                                <p>Số bài hát: {dataAlbum.songs.length}</p>
+                                <p>Ngày phát hành: {new Date(dataAlbum.release_day).toLocaleDateString("vi-VN")}</p>
+                            </div>
                         </Col>
                     </Row>
                 )
@@ -121,4 +120,4 @@ function PlayListDetail() {
         </>
     )
 }
-export default PlayListDetail;
+export default AlbumDetail;
