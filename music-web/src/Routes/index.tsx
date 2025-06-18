@@ -40,16 +40,28 @@ const getUser = () => {
     }
 };
 
-const ProtectedRoute = ({ children, role }: { children: React.ReactNode; role?: string }) => {
+const ProtectedAdminRoute = ({ children, role }: { children: React.ReactNode; role?: string }) => {
     const user = getUser();
 
     if (!user) return <Navigate to="/login" replace />;
 
-    if (role && user.role !== role) {
-        return <Navigate to="/" replace />;
+    if (user.role === "Admin" || user.role === "Manager") {
+        return <>{children}</>;
     }
 
-    return <>{children}</>;
+    // Ngược lại redirect về trang người dùng
+    return <Navigate to="/" replace />;
+};
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const user = getUser();
+
+  if (!user) return <Navigate to="/login" replace />;
+
+  if (user.role !== "User") {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
+  return <>{children}</>;
 };
 
 const UnauthorizedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -123,9 +135,9 @@ export const routes =[
     {
         path: "/admin",
         element: (
-            <ProtectedRoute role = 'Admin'>
+            <ProtectedAdminRoute>
                 <LayoutAdmin />
-            </ProtectedRoute>
+            </ProtectedAdminRoute>
         ),
         children: [
             {

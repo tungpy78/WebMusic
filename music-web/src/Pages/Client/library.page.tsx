@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import "../../assets/scss/playlist.scss"
 import { Link } from "react-router-dom";
 import { deletePlayList, getPlayList } from "../../Services/playlist.service";
-import { Playlist1, Song } from "../../models/song.model";
-import { getFavorite } from "../../Services/favorite.service";
+import { Playlist1 } from "../../models/song.model";
 import Favorite from "../../Components/element/favorite";
 import { toast, ToastContainer } from "react-toastify";
 

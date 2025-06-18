@@ -3,6 +3,8 @@ import { FaMusic } from "react-icons/fa";
 import "../../assets/scss/Page404.scss";
 
 function Page404() {
+  const user = localStorage.getItem("user");
+  console.log(user);
   return (
     <div className="page404">
       <div className="page404__content">
