@@ -23,7 +23,7 @@ const HistoryManager = () => {
             fethApi();
         },[]);
         useEffect(() => {
-            if(searchKeyword==='') setHistoryActionShow(historyAction);
+            if(searchKeyword === '') setHistoryActionShow(historyAction);
              if (historyAction.length === 0) return;
             const normalize = (str: string) =>
                 str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
@@ -106,38 +106,54 @@ const HistoryManager = () => {
                     <div>Thời gian thực hiện </div>
                 </div>
 
-                {currentTopics.map((topics, index) => (
-                    <div
-                        key={topics._id}
-                        style={{
-                            display: 'grid',
-                            gridTemplateColumns: '8%  15% 15% 52% 10%',
-                            padding: '12px 16px',
-                            backgroundColor: '#fff',
-                            marginBottom: '8px',
-                            borderRadius: '6px',
-                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                            alignItems: 'center',
-                            transition: 'background-color 0.2s',
-                            cursor: 'default'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9f9f9'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}
-                    >
-                        <div>{startIndex + index + 1}</div>
-                        <div>{topics.user}</div>
-                        <div>{topics.phone}</div>
+                {currentTopics.length > 0 ? (
+                    currentTopics.map((topics, index) => (
                         <div
+                            key={topics._id}
                             style={{
-                                whiteSpace: 'pre-wrap',       
-                                wordBreak: 'break-word',      
+                                display: 'grid',
+                                gridTemplateColumns: '8%  15% 15% 52% 10%',
+                                padding: '12px 16px',
+                                backgroundColor: '#fff',
+                                marginBottom: '8px',
+                                borderRadius: '6px',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                                alignItems: 'center',
+                                transition: 'background-color 0.2s',
+                                cursor: 'default'
                             }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9f9f9'}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}
+                        >
+                            <div>{startIndex + index + 1}</div>
+                            <div>{topics.user}</div>
+                            <div>{topics.phone}</div>
+                            <div
+                                style={{
+                                    whiteSpace: 'pre-wrap',
+                                    wordBreak: 'break-word',
+                                }}
                             >
-                            {topics.content}
+                                {topics.content}
+                            </div>
+                            <div>{new Date(topics.listenedAt).toLocaleDateString('vi-VN')}</div>
                         </div>
-                        <div>{new Date(topics.listenedAt).toLocaleDateString('vi-VN')}</div>             
+                    ))
+                ) : (
+                    <div
+                        style={{
+                            padding: '20px',
+                            textAlign: 'center',
+                            color: '#999',
+                            fontStyle: 'italic',
+                            backgroundColor: '#fff',
+                            borderRadius: '6px',
+                            marginTop: '10px'
+                        }}
+                    >
+                        Không tìm thấy kết quả
                     </div>
-                ))}
+                )}
 
                 {totalPages > 1 && (
                     <div style={{marginTop: '20px', textAlign: 'center'}}>
@@ -161,55 +177,6 @@ const HistoryManager = () => {
                     </div>
                 )}
             </div>
-        
-        {currentTopics.length > 0 ? (
-            currentTopics.map((topics, index) => (
-                <div
-                    key={topics._id}
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: '8%  15% 15% 52% 10%',
-                        padding: '12px 16px',
-                        backgroundColor: '#fff',
-                        marginBottom: '8px',
-                        borderRadius: '6px',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                        alignItems: 'center',
-                        transition: 'background-color 0.2s',
-                        cursor: 'default'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9f9f9'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}
-                >
-                    <div>{startIndex + index + 1}</div>
-                    <div>{topics.user}</div>
-                    <div>{topics.phone}</div>
-                    <div
-                        style={{
-                            whiteSpace: 'pre-wrap',
-                            wordBreak: 'break-word',
-                        }}
-                    >
-                        {topics.content}
-                    </div>
-                    <div>{new Date(topics.listenedAt).toLocaleDateString('vi-VN')}</div>
-                </div>
-            ))
-        ) : (
-            <div
-                style={{
-                    padding: '20px',
-                    textAlign: 'center',
-                    color: '#999',
-                    fontStyle: 'italic',
-                    backgroundColor: '#fff',
-                    borderRadius: '6px',
-                    marginTop: '10px'
-                }}
-            >
-                Không tìm thấy kết quả
-            </div>
-        )}
         </div>
     );
 };

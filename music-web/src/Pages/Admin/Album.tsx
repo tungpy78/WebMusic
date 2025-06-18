@@ -135,6 +135,12 @@ const Album = () => {
     const [artistForAlbum,setArtistForAlbum] = useState<ArtistAdmin>();
     const [allAvailableSongsRequest, setAllAvailableSongsRequest] = useState<SongAdmin[]>([]);
 
+    const [currentPage, setCurrentPage] = useState(0);
+    const accountsPerPage = 8;
+    const totalPages = Math.ceil(albums.length / accountsPerPage);
+    const startIndex = currentPage * accountsPerPage;
+    const currentAlbums = albums.slice(startIndex, startIndex + accountsPerPage);
+
     const songOptions = allAvailableSongs.map(song => ({
         value: song._id,
         label: song.title,
@@ -274,29 +280,50 @@ const Album = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {/* Render danh sách album từ state */}
-                    {albums.map((album, index) => (
-                        <tr key={album._id}>
-                            <td>{index + 1}</td>
-                            <td>
-                                <img
-                                    src={album.avatar || 'https://via.placeholder.com/60'} // Ảnh mặc định nếu không có
-                                    alt={'album avata'}
-                                    className="album-avatar"
-                                />
-                            </td>
-                            <td>{album.album_name}</td>
-                            <td>{album.artist.name}</td>
-                            <td>
-                                <div className="action-buttons">
-                                    <button className="btn btn-info" onClick={() => {handleViewDetails(album);setShowFormDetail(true)}}>Xem</button>
-                                    <button className="btn btn-success" onClick={() => {handleAddSong(album);setShowFormAddSong(true);setAlbumId(album._id)}}>Thêm bài hát</button>
-                                    <button className="btn btn-warning" onClick={() => {handleEditAlbum(album);setShowForm(true);setiscreate(false);setAlbumId(album._id)}}>Sửa</button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
+                        {currentAlbums.map((album, index) => (
+                            <tr key={album._id}>
+                                <td>{startIndex + index + 1}</td> {/* Đảm bảo STT chính xác */}
+                                <td>
+                                    <img
+                                        src={album.avatar || 'https://via.placeholder.com/60'}
+                                        alt={'album avatar'}
+                                        className="album-avatar"
+                                    />
+                                </td>
+                                <td>{album.album_name}</td>
+                                <td>{album.artist.name}</td>
+                                <td>
+                                    <div className="action-buttons">
+                                        <button className="btn btn-info" onClick={() => { handleViewDetails(album); setShowFormDetail(true); }}>Xem</button>
+                                        <button className="btn btn-success" onClick={() => { handleAddSong(album); setShowFormAddSong(true); setAlbumId(album._id); }}>Thêm bài hát</button>
+                                        <button className="btn btn-warning" onClick={() => { handleEditAlbum(album); setShowForm(true); setiscreate(false); setAlbumId(album._id); }}>Sửa</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                        {totalPages > 1 && (
+                            <div style={{marginTop: '20px', textAlign: 'center'}}>
+                                {Array.from({length: totalPages}, (_, pageIndex) => (
+                                    <button
+                                        key={pageIndex}
+                                        onClick={() => setCurrentPage(pageIndex)}
+                                        style={{
+                                            margin: '0 5px',
+                                            padding: '6px 12px',
+                                            border: '1px solid #ccc',
+                                            backgroundColor: currentPage === pageIndex ? '#4CAF50' : '#fff',
+                                            color: currentPage === pageIndex ? '#fff' : '#000',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        {pageIndex + 1}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </tbody>
+
                 </table>
             </div>
 
