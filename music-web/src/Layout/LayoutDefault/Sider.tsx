@@ -1,4 +1,4 @@
-import { ClockCircleOutlined, CustomerServiceOutlined, FireOutlined, FolderOutlined, FundOutlined, HeartOutlined, ProductOutlined, StarOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from "@ant-design/icons"
+import { ClockCircleOutlined, CustomerServiceOutlined, FolderOutlined, FundOutlined, HeartOutlined, ProductOutlined, StarOutlined, UserOutlined } from "@ant-design/icons"
 import { Menu } from "antd"
 import { Link } from "react-router-dom"
 

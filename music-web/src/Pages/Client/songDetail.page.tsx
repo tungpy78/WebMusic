@@ -5,7 +5,7 @@ import "../../Layout/LayoutDefault/layoutdefault.scss"
 import { FolderAddOutlined, HeartOutlined, PauseOutlined, PlayCircleOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import { Song } from "../../models/song.model";
-import { addFavorite, addHistory, addPlayList, createPlayList, getSong } from "../../Services/song.service";
+import { addHistory, addPlayList, createPlayList, getSong } from "../../Services/song.service";
 import { Link, useParams } from "react-router-dom";
 import APlayer from "aplayer"; // Import APlayer
 import 'aplayer/dist/APlayer.min.css'; // Import CSS của APlayer
@@ -110,7 +110,7 @@ function SongDetail() {
     const handleAddFavorite = async () => {
         try {
             setIsFavorite(!isFavorite);
-            const response = await addFavorite(songId);
+            await addPlayList(songId, playListId);
             setSong(prev => {
                 if (!prev) return prev;
                 return {

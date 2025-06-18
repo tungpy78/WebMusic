@@ -22,7 +22,7 @@ function TopicDetail() {
         };
 
         fetchSongs();
-    }, []);
+    }, [topicId]);
     console.log("songs", songs);
     
     return(
