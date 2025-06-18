@@ -1,9 +1,14 @@
 import { TopicRequest } from "../Pages/Admin/Topic";
-import { get, patch, patchFormData, post, postFormData } from "../Utils/authorizedAxios";
+import { get, patch, patchFormData, postFormData } from "../Utils/authorizedAxios";
 
 
 export const getTopic = async () => {
-    const result = await get(`admin/topic/adminTopics`);
+    const result = await get(`topic`);
+    return result;
+}
+
+export const getTopicAdmin = async () => {
+    const result = await get(`topic/adminTopics`);
     return result;
 }
 

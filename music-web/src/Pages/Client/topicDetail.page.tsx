@@ -41,13 +41,13 @@ function TopicDetail() {
                   <div className="inner__item--title">
                     <h4>{item.title}</h4>
                     <p>
-                    {item.artist.map((artist, index) => (
-                      <span key={artist._id}>
-                        <Link to={`/artist/${artist._id}`}>{artist.name}</Link>
-                        {index < item.artist.length - 1 && ", "}
-                      </span>
-                    ))}
-                  </p>
+                      {item.artist.map((artist, index) => (
+                        <span key={artist._id}>
+                          <Link to={`/artist/${artist._id}`}>{artist.name}</Link>
+                          {index < item.artist.length - 1 && ", "}
+                        </span>
+                      ))}
+                    </p>
                   </div>
                 </Link>
             
