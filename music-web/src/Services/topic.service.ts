@@ -1,5 +1,5 @@
 import { TopicRequest } from "../Pages/Admin/Topic";
-import { get, patch, patchFormData, post, postFormData } from "../Utils/authorizedAxios";
+import { get, patch, patchFormData, postFormData } from "../Utils/authorizedAxios";
 
 
 export const getTopic = async () => {

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getTopic } from "../../Services/topic.service";
 import "../../assets/scss/dashboard.scss";
-import { Button, Card, Col, Row } from "antd";
+import { Button, Col, Row } from "antd";
 import { Topic } from '../../models/Topic.model';
 import { Link } from "react-router-dom";
 
@@ -32,7 +32,7 @@ function TopicMusic(){
             <Row gutter={[20, 20]} className="topic__list">
                 {topics.map((item) => (
                     <Col key={item._id} xs={24} sm={12} md={12} lg={8} xl={6}>
-                        <div className="topic__item" style={{ height: "100%" }}>
+                        <div className="topic__item">
                             <div className="topic__item--image">
                                 <img src={item.avatar} alt={item.title} />
                             </div>
