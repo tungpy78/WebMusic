@@ -15,7 +15,7 @@ const changeProfile = async (email: string, phone: string) => {
     });
     return response;
 };
-const changePassword = async (oldPassword: string, newPassword: string) => {
+export const changePassword = async (oldPassword: string, newPassword: string) => {
     const response = await post("auth/change-password", { oldPassword, newPassword });
     return response;
 }

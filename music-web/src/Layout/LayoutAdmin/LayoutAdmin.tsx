@@ -14,12 +14,15 @@ import {
     faChevronDown,
     faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
+import { Button, Form, Input, Modal } from 'antd';
+import {toast, ToastContainer} from 'react-toastify';
+import {changePassword} from '../../Services/userService'
 
 // Định nghĩa interface cho menu item
 interface MenuItem {
     id: string;
     name: string;
-    icon: any; // Có thể cải thiện bằng cách dùng kiểu từ @fortawesome
+    icon: any;
     path?: string;
     children?: { id: string; name: string; path: string }[];
 }
@@ -39,7 +42,9 @@ const LayoutAdmin = () => {
     const [selectedItem, setSelectedItem] = useState<string>('');
     const [openRoleAccount, setOpenRoleAccount] = useState<boolean>(false);
     const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-    const dropdownRef = useRef<HTMLDivElement | null>(null); // Chỉ định kiểu cho useRef
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
+    const [form] = Form.useForm();
+    const [isPasswordModalVisible, setIsPasswordModalVisible] = useState<boolean>(false);
     const user_current: User = JSON.parse(localStorage.getItem('user') || '{}');
     const userRole = user_current?.role || 'Manager';
 
@@ -101,7 +106,7 @@ const LayoutAdmin = () => {
 
     const filteredMenuItems = userRole === 'Admin'
         ? menuItems
-        : menuItems.filter(item => !['dashboard', 'role-account', 'history-manager'].includes(item.id));
+        : menuItems.filter(item => !['role-account', 'history-manager'].includes(item.id));
 
     const handleChildClick = (id: string) => {
         setSelectedItem(id);
@@ -111,11 +116,39 @@ const LayoutAdmin = () => {
 
     const handleLogout = () => {
         localStorage.removeItem("user");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         navigate("/login");
     };
 
     const handleProfile = () => {
         navigate("/admin/profile");
+    };
+
+    const handlePassword = () => {
+        setIsPasswordModalVisible(true); // Mở modal khi nhấn "Đổi mật khẩu"
+    };
+
+    const handlePasswordSubmit = async (values: { oldPassword: string; newPassword: string }) => {
+        try {
+            // Gọi API đổi mật khẩu
+            const response = await changePassword(values.oldPassword, values.newPassword);
+            console.log(response);
+            // Hiển thị thông báo thành công
+            toast.success(response.data.message || "Đổi mật khẩu thành công!");
+
+            // Đóng modal và reset form
+            setIsPasswordModalVisible(false);
+            form.resetFields();
+        } catch (error: any) {
+            // Hiển thị thông báo lỗi
+            console.error("Đổi mật khẩu thất bại:", error);
+        }
+    };
+
+    const handlePasswordCancel = () => {
+        setIsPasswordModalVisible(false);
+        form.resetFields();
     };
 
     useEffect(() => {
@@ -132,6 +165,8 @@ const LayoutAdmin = () => {
     }, []);
 
     return (
+        <>
+        <ToastContainer/>
         <div className="admin-layout">
             <header className="admin-header">
                 <div className="admin-header__logo">
@@ -163,6 +198,9 @@ const LayoutAdmin = () => {
                                 <div className="admin-header__dropdown" ref={dropdownRef}>
                                     <div className="admin-header__dropdown-item" onClick={handleProfile}>
                                         Hồ sơ
+                                    </div>
+                                    <div className="admin-header__dropdown-item" onClick={handlePassword}>
+                                        Đổi mật khẩu
                                     </div>
                                     <div className="admin-header__dropdown-item" onClick={handleLogout}>
                                         Đăng xuất
@@ -244,7 +282,46 @@ const LayoutAdmin = () => {
                     <Outlet/>
                 </div>
             </div>
+
+            {/* Modal đổi mật khẩu */}
+            <Modal
+                title="Đổi mật khẩu"
+                visible={isPasswordModalVisible}
+                onCancel={handlePasswordCancel}
+                footer={null}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                    name="FormChangePassword"
+                    onFinish={handlePasswordSubmit}
+                >
+                    <Form.Item
+                        label="Mật khẩu cũ"
+                        name="oldPassword"
+                        rules={[{ required: true, message: 'Vui lòng nhập mật khẩu cũ!' }]}
+                    >
+                        <Input.Password placeholder="Mật khẩu cũ" />
+                    </Form.Item>
+                    <Form.Item
+                        label="Mật khẩu mới"
+                        name="newPassword"
+                        rules={[
+                            { required: true, message: 'Vui lòng nhập mật khẩu mới!' },
+                            { min: 6, message: 'Mật khẩu mới phải có ít nhất 6 ký tự!' }
+                        ]}
+                    >
+                        <Input.Password placeholder="Mật khẩu mới" />
+                    </Form.Item>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+                            Đổi mật khẩu
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </div>
+        </>
     );
 };
 
