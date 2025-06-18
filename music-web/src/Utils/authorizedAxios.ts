@@ -1,7 +1,8 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const API_DOMAIN = "http://localhost:5000";
+const API_DOMAIN = process.env.REACT_APP_API_DOMAIN!;
+console.log("API_DOMAIN", process.env.REACT_APP_API_DOMAIN);
 
 let authorizedAxiosInstance = axios.create({
     baseURL: API_DOMAIN,
