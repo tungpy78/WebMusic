@@ -1,4 +1,4 @@
-import { Button, Checkbox, Col, Input, Modal, Radio, Row, Tabs } from "antd";
+import { Button, Col, Input, Modal, Radio, Row, Tabs } from "antd";
 import "../../assets/scss/songDetail.scss"
 import "../../Layout/LayoutDefault/layoutdefault.scss"
 
@@ -6,7 +6,7 @@ import { FolderAddOutlined, HeartOutlined, PauseOutlined, PlayCircleOutlined } f
 import { useEffect, useRef, useState } from "react";
 import { Song } from "../../models/song.model";
 import { addFavorite, addHistory, addPlayList, createPlayList, getSong } from "../../Services/song.service";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import APlayer from "aplayer"; // Import APlayer
 import 'aplayer/dist/APlayer.min.css'; // Import CSS của APlayer
 import TabPane from "antd/es/tabs/TabPane";

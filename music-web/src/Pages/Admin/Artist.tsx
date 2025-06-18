@@ -1,19 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { createArtist, getArtist, updateArtist } from '../../Services/artist.service';
+import { ArtistRequest, ArtistType } from '../../models/artist.model';
 
-type ArtistType ={
-    _id: string,
-    name: string,
-    bio: string,
-    imageUrl: string,
-}
-
-export type ArtistRequest = {
-    name: string,
-    bio: string,
-    fileAvata: File | null,
-}
 
 const Artist = () => {
     const [showForm, setShowForm] = useState(false);
@@ -23,7 +12,7 @@ const Artist = () => {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-     const [iscreate, setiscreate] = useState<boolean>(false);
+    const [iscreate, setiscreate] = useState<boolean>(false);
     const [isHoveringAdd, setIsHoveringAdd] = useState(false);
     const [artist, setArtist] = useState<ArtistType[]>([])
      useEffect(() => {

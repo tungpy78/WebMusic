@@ -1,4 +1,5 @@
-import { ArtistRequest } from "../Pages/Admin/Artist";
+
+import { ArtistRequest } from "../models/artist.model";
 import { get, patchFormData, postFormData } from "../Utils/authorizedAxios";
 
 export const getArtist = async()=>{

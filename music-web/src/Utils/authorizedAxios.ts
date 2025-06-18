@@ -1,7 +1,8 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const API_DOMAIN = "http://localhost:5000";
+const API_DOMAIN = process.env.REACT_APP_API_DOMAIN!;
+console.log("API_DOMAIN", process.env.REACT_APP_API_DOMAIN);
 
 let authorizedAxiosInstance = axios.create({
     baseURL: API_DOMAIN,
@@ -100,7 +101,7 @@ authorizedAxiosInstance.interceptors.response.use((response) => {
 
       const refreshToken = localStorage.getItem("refreshToken");
       console.log("refreshToken410", refreshToken);
-      return authorizedAxiosInstance.put(`${API_DOMAIN}auth/refresh-token`, { refreshToken })
+      return authorizedAxiosInstance.put(`${API_DOMAIN}/auth/refresh-token`, { refreshToken })
         .then((res) => {
         const accessToken = res.data.accessToken ;
           console.log("res410", res.data);

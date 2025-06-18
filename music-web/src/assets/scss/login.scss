@@ -8,3 +8,87 @@ html, body {
     display: flex;
     justify-content: space-between;
 }
+.login-page, .register-page {
+  background: linear-gradient(to bottom right, #2a0845, #6441a5);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+
+  .ant-card {
+    background: rgba(255, 255, 255, 0.1); // hoặc rgba(0, 0, 0, 0.4)
+    -webkit-backdrop-filter: blur(15px); // ✅ viết trước
+    backdrop-filter: blur(15px);         // ✅ chuẩn, viết sau
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    animation: fadeIn 1s ease-in-out;
+    transition: all 0.3s ease-in-out;
+
+    h1 {
+      color: #fff;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .ant-form-item-label > label {
+      color: #eee;
+      font-weight: 500;
+    }
+
+    .ant-input,
+    .ant-input-password {
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .ant-input::placeholder {
+      color: #aaa;
+    }
+
+    .ant-btn-primary {
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      border: none;
+      border-radius: 10px;
+      height: 45px;
+      font-weight: 600;
+      font-size: 16px;
+
+      &:hover {
+        filter: brightness(1.1);
+      }
+    }
+
+    .inner-content {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+
+      a {
+        color: #fff;
+        text-decoration: underline;
+
+        &:hover {
+          color: #ffd700;
+        }
+
+        p {
+          margin: 0;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

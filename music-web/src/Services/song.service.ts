@@ -1,5 +1,10 @@
 import {get, patchFormData, post, postFormData, patch} from "../Utils/authorizedAxios";
 
+export const getSongsByArtist = async(artist_id: string) =>{
+    const result = await get(`song/artist/${artist_id}`);
+    return result;
+}
+
 export const getSong = async (songId: string) => {
     const result = await get(`song/${songId}`);
     return result;

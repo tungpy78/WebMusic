@@ -1,0 +1,82 @@
+.page404 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #1f0036, #33004d);
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+  text-align: center;
+
+  &__content {
+    animation: fadeIn 0.6s ease-in-out;
+    max-width: 600px;
+
+    .music-icon {
+      font-size: 60px;
+      color: #f754b5;
+      margin-bottom: 10px;
+      animation: pulse 2s infinite;
+    }
+
+    h1 {
+      font-size: 6rem;
+      margin: 0;
+      color: #f754b5;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin: 10px 0;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #ddd;
+      margin-bottom: 30px;
+    }
+
+    .page404__btn {
+      background: #f754b5;
+      color: white;
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-size: 1rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: #ff89c0;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
