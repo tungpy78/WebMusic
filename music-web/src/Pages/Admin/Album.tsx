@@ -97,9 +97,6 @@ const saveBtnStyle: React.CSSProperties = {
   cursor: 'pointer'
 };
 
-
-
-
 const Album = () => {
     const [showForm, setShowForm] = useState(false);
     const [showFormDetail,setShowFormDetail] = useState(false);

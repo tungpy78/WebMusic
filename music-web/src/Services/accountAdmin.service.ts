@@ -14,7 +14,7 @@ export const post_status = async (account_id: String) => {
 }
 
 export const reset_pass = async (account_id: String) => {
-    const result = await post(`admin/auth/setpassdefault/${account_id}`,
+    const result = await patch(`admin/auth/setpassdefault/${account_id}`,
         {
         }
     );

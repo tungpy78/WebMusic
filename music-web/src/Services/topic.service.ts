@@ -8,7 +8,7 @@ export const getTopic = async () => {
 }
 
 export const getTopicAdmin = async () => {
-    const result = await get(`topic/adminTopics`);
+    const result = await get(`admin/topic/adminTopics`);
     return result;
 }
 

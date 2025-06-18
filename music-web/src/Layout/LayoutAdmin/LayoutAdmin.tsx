@@ -1,7 +1,7 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './LayoutAdmin.scss';
 import './fontawesome';
-import {Outlet, useLocation, useNavigate} from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faTachometerAlt,
@@ -14,27 +14,50 @@ import {
     faChevronDown,
     faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
+import { Button, Form, Input, Modal } from 'antd';
+import {toast, ToastContainer} from 'react-toastify';
+import {changePassword} from '../../Services/userService'
+
+// Định nghĩa interface cho menu item
+interface MenuItem {
+    id: string;
+    name: string;
+    icon: any;
+    path?: string;
+    children?: { id: string; name: string; path: string }[];
+}
+
+// Định nghĩa interface cho user
+interface User {
+    userId: string;
+    phone: string;
+    role: string;
+    fullname: string;
+    email: string;
+}
 
 const LayoutAdmin = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const [selectedItem, setSelectedItem] = useState('');
-    const [openRoleAccount, setOpenRoleAccount] = useState(false);
-    // Khai báo biến state isCollapsed
-    const [isCollapsed, setIsCollapsed] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
+    const [selectedItem, setSelectedItem] = useState<string>('');
+    const [openRoleAccount, setOpenRoleAccount] = useState<boolean>(false);
+    const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
+    const [form] = Form.useForm();
+    const [isPasswordModalVisible, setIsPasswordModalVisible] = useState<boolean>(false);
+    const user_current: User = JSON.parse(localStorage.getItem('user') || '{}');
+    const userRole = user_current?.role || 'Manager';
 
     useEffect(() => {
         const path = location.pathname;
 
         if (path === '/admin' || path === '/admin/') {
-            // Khi vô /admin thì chuyển sang /admin/dashboard
             setSelectedItem('dashboard');
             setOpenRoleAccount(false);
             navigate('/admin/dashboard', { replace: true });
             return;
         }
-        // Xác định selectedItem dựa trên path hiện tại
+
         if (path.startsWith('/admin/dashboard')) {
             setSelectedItem('dashboard');
             setOpenRoleAccount(false);
@@ -60,13 +83,12 @@ const LayoutAdmin = () => {
             setSelectedItem('album');
             setOpenRoleAccount(false);
         } else {
-            // Nếu path không khớp, reset chọn mục nào đó hoặc để trống
             setSelectedItem('');
             setOpenRoleAccount(false);
         }
     }, [location.pathname, navigate]);
 
-    const menuItems = [
+    const menuItems: MenuItem[] = [
         { id: 'dashboard', name: 'Dashboard', icon: faTachometerAlt, path: '/admin/dashboard' },
         {
             id: 'role-account', name: 'Vai trò & Tài khoản', icon: faUsersCog,
@@ -82,20 +104,51 @@ const LayoutAdmin = () => {
         { id: 'album', name: 'Album', icon: faCompactDisc, path: '/admin/album' }
     ];
 
-    // Click vào thẻ con
+    const filteredMenuItems = userRole === 'Admin'
+        ? menuItems
+        : menuItems.filter(item => !['role-account', 'history-manager'].includes(item.id));
+
     const handleChildClick = (id: string) => {
         setSelectedItem(id);
     };
 
-    const [showDropdown, setShowDropdown] = useState(false);
+    const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
     const handleLogout = () => {
         localStorage.removeItem("user");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         navigate("/login");
     };
 
     const handleProfile = () => {
-        navigate("/profile");
+        navigate("/admin/profile");
+    };
+
+    const handlePassword = () => {
+        setIsPasswordModalVisible(true); // Mở modal khi nhấn "Đổi mật khẩu"
+    };
+
+    const handlePasswordSubmit = async (values: { oldPassword: string; newPassword: string }) => {
+        try {
+            // Gọi API đổi mật khẩu
+            const response = await changePassword(values.oldPassword, values.newPassword);
+            console.log(response);
+            // Hiển thị thông báo thành công
+            toast.success(response.data.message || "Đổi mật khẩu thành công!");
+
+            // Đóng modal và reset form
+            setIsPasswordModalVisible(false);
+            form.resetFields();
+        } catch (error: any) {
+            // Hiển thị thông báo lỗi
+            console.error("Đổi mật khẩu thất bại:", error);
+        }
+    };
+
+    const handlePasswordCancel = () => {
+        setIsPasswordModalVisible(false);
+        form.resetFields();
     };
 
     useEffect(() => {
@@ -112,6 +165,8 @@ const LayoutAdmin = () => {
     }, []);
 
     return (
+        <>
+        <ToastContainer/>
         <div className="admin-layout">
             <header className="admin-header">
                 <div className="admin-header__logo">
@@ -137,12 +192,15 @@ const LayoutAdmin = () => {
                             onClick={() => setShowDropdown(prev => !prev)}
                         >
                             <img src="/avatar_admin.png" alt="Avatar" className="admin-header__avatar"/>
-                            <div className="admin-header__name">John Doe</div>
+                            <div className="admin-header__name">{user_current?.fullname || 'John Doe'}</div>
                             <FontAwesomeIcon icon={['fas', 'caret-down']} className="admin-header__caret"/>
                             {showDropdown && (
                                 <div className="admin-header__dropdown" ref={dropdownRef}>
                                     <div className="admin-header__dropdown-item" onClick={handleProfile}>
                                         Hồ sơ
+                                    </div>
+                                    <div className="admin-header__dropdown-item" onClick={handlePassword}>
+                                        Đổi mật khẩu
                                     </div>
                                     <div className="admin-header__dropdown-item" onClick={handleLogout}>
                                         Đăng xuất
@@ -158,7 +216,7 @@ const LayoutAdmin = () => {
                 <ul className="admin-body__sidebar" data-collapsed={isCollapsed}>
                     <li className="sidebar__title">Navigation</li>
 
-                    {menuItems.map(item => {
+                    {filteredMenuItems.map(item => {
                         const isActive = selectedItem === item.id || (item.children && item.children.some(c => c.id === selectedItem));
                         const isRoleAccount = item.id === 'role-account';
 
@@ -178,7 +236,6 @@ const LayoutAdmin = () => {
                                             }
                                         }
                                     }}
-
                                 >
                                     {(isActive || (isRoleAccount && openRoleAccount)) && (
                                         <div className="sidebar__choose"></div>
@@ -206,7 +263,6 @@ const LayoutAdmin = () => {
                                                         handleChildClick(child.id);
                                                         navigate(child.path);
                                                     }}
-
                                                 >
                                                     <div className="submenu__choose"></div>
                                                     <FontAwesomeIcon icon={faChevronRight}
@@ -226,7 +282,46 @@ const LayoutAdmin = () => {
                     <Outlet/>
                 </div>
             </div>
+
+            {/* Modal đổi mật khẩu */}
+            <Modal
+                title="Đổi mật khẩu"
+                visible={isPasswordModalVisible}
+                onCancel={handlePasswordCancel}
+                footer={null}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                    name="FormChangePassword"
+                    onFinish={handlePasswordSubmit}
+                >
+                    <Form.Item
+                        label="Mật khẩu cũ"
+                        name="oldPassword"
+                        rules={[{ required: true, message: 'Vui lòng nhập mật khẩu cũ!' }]}
+                    >
+                        <Input.Password placeholder="Mật khẩu cũ" />
+                    </Form.Item>
+                    <Form.Item
+                        label="Mật khẩu mới"
+                        name="newPassword"
+                        rules={[
+                            { required: true, message: 'Vui lòng nhập mật khẩu mới!' },
+                            { min: 6, message: 'Mật khẩu mới phải có ít nhất 6 ký tự!' }
+                        ]}
+                    >
+                        <Input.Password placeholder="Mật khẩu mới" />
+                    </Form.Item>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+                            Đổi mật khẩu
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </div>
+        </>
     );
 };
 

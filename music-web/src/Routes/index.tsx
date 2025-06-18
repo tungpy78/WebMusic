@@ -28,6 +28,7 @@ import AlbumPage from "../Pages/Client/album.page";
 import AlbumDetail from "../Pages/Client/albumDetail";
 import ArtistPage from "../Pages/Client/artist.page";
 import Page404 from "../Pages/Client/page404";
+import ProfileAdmin from "../Pages/Admin/ProfileAdmin";
 
 const getUser = () => {
     try {
@@ -171,6 +172,10 @@ export const routes =[
             {
                 path: "album",
                 element: <Album/>
+            },
+            {
+                path: "profile",
+                element: <ProfileAdmin/>
             }
         ]
     },

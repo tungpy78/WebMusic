@@ -1,4 +1,4 @@
-import { get, post } from "../Utils/authorizedAxios";
+import {get, patchFormData, post, postFormData, patch} from "../Utils/authorizedAxios";
 
 export const getSongsByArtist = async(artist_id: string) =>{
     const result = await get(`song/artist/${artist_id}`);
@@ -53,9 +53,87 @@ export const addHistory = async(songId: string) => {
     return result;
 }
 
-export const create_song = async(fileaudio: File, title: string, genre: string, fileavatar: File, description: string, lyrics: string, artist: string[]) => {
-    const result = await post('admin/song/create',{
-        fileaudio, title, genre, fileavatar, description, lyrics, artist
-    })
+export const delete_song = async(songId: string) => {
+    const result = await patch(`admin/song/delete/${songId}`,{
+
+    });
     return result;
 }
+
+export const restore_song = async(songId: string) => {
+    const result = await patch(`admin/song/restore/${songId}`,{
+
+    });
+    return result;
+}
+
+export const getAllSongAdmin = async() => {
+    const result = await get(`admin/song/getAllAdmin`);
+    return result;
+}
+
+export const create_song = async (
+    fileaudio: File,
+    title: string,
+    genre: string,
+    fileavatar: File,
+    description: string,
+    lyrics: string,
+    artist: string[]
+) => {
+    const formData = new FormData();
+    formData.append('fileaudio', fileaudio);
+    formData.append('fileavatar', fileavatar);
+    formData.append('title', title);
+    formData.append('genre', genre);
+    formData.append('description', description);
+    formData.append('lyrics', lyrics);
+    for(const artistID of artist){
+        formData.append('artist', artistID);
+        console.log(artistID);
+    }
+
+
+    const result = await postFormData('admin/song/create', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return result;
+};
+
+export const update_song = async (
+    song_id: string,
+    fileaudio: File | null,
+    title: string,
+    genre: string,
+    fileavatar: File | null,
+    description: string,
+    lyrics: string,
+    artist: string[]
+) => {
+    const formData = new FormData();
+    if (fileaudio !== null) {
+        formData.append('fileaudio', fileaudio);
+    }
+    formData.append('title', title);
+    for(const artistID of artist){
+        formData.append('artist', artistID);
+        console.log(artistID);
+    }
+    formData.append('genre', genre);
+    if (fileavatar !== null) {
+        formData.append('fileavatar', fileavatar);
+    }
+    formData.append('description', description);
+    formData.append('lyrics', lyrics);
+
+    const result = await patchFormData(`admin/song/update/${song_id}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return result;
+};
+
+
