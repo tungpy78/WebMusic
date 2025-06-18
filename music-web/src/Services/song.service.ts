@@ -1,9 +1,15 @@
 import { get, post } from "../Utils/authorizedAxios";
 
+export const getSongsByArtist = async(artist_id: string) =>{
+    const result = await get(`song/artist/${artist_id}`);
+    return result;
+}
+
 export const getSong = async (songId: string) => {
     const result = await get(`song/${songId}`);
     return result;
 }
+
 export const getAllSong = async () => {
     const result = await get(`song`);
     return result;
@@ -43,6 +49,13 @@ export const createPlayList = async(songId: string,name: string) => {
 export const addHistory = async(songId: string) => {
     const result = await post(`song/${songId}/addHistory`,{
         songId
+    })
+    return result;
+}
+
+export const create_song = async(fileaudio: File, title: string, genre: string, fileavatar: File, description: string, lyrics: string, artist: string[]) => {
+    const result = await post('song/create',{
+        fileaudio, title, genre, fileavatar, description, lyrics, artist
     })
     return result;
 }
