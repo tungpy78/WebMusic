@@ -2,7 +2,7 @@ import { AlbumRequest } from "../models/album.model"
 import { get, patch, patchFormData, postFormData } from "../Utils/authorizedAxios"
 
 export const getAlbum = async()=>{
-    const result = await get(`album/albumForAdmin`)
+    const result = await get(`admin/album/albumForAdmin`)
     return result
 }
 
@@ -20,7 +20,7 @@ export const createAlbum = async(albumRequest:AlbumRequest)=>{
                 formData.append("avatar", albumRequest.avatar);
             }
         
-            const result = await postFormData('album/create', formData, {
+            const result = await postFormData('admin/album/create', formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 }
@@ -29,7 +29,7 @@ export const createAlbum = async(albumRequest:AlbumRequest)=>{
 }
 
 export const changeSong = async(song_id: string[], album_id:string) =>{
-    const result = await patch('album/addsongtoalbum',
+    const result = await patch('admin/album/addsongtoalbum',
         {
             "song_id": song_id,
             "album_id":album_id
@@ -46,7 +46,7 @@ export const updateAlbum = async(album_id:string,albumRequest:AlbumRequest)=>{
             if (albumRequest.avatar) {
                 formData.append("avatar", albumRequest.avatar);
             }   
-            const result = await patchFormData(`album/update/${album_id}`, formData, {
+            const result = await patchFormData(`admin/album/update/${album_id}`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 }
