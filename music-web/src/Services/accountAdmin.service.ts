@@ -1,12 +1,12 @@
 import {get, post, patch} from "../Utils/authorizedAxios";
 
 export const getAccountDetail = async () => {
-    const result = await get(`auth/getaccount`);
+    const result = await get(`admin/auth/getaccount`);
     return result.data;
 }
 
 export const post_status = async (account_id: String) => {
-    const result = await patch(`auth/setStatus/${account_id}`,
+    const result = await patch(`admin/auth/setStatus/${account_id}`,
         {
         }
     );
@@ -14,7 +14,7 @@ export const post_status = async (account_id: String) => {
 }
 
 export const reset_pass = async (account_id: String) => {
-    const result = await post(`auth/setpassdefault/${account_id}`,
+    const result = await post(`admin/auth/setpassdefault/${account_id}`,
         {
         }
     );
@@ -22,7 +22,7 @@ export const reset_pass = async (account_id: String) => {
 }
 
 export const create_account = async (fullname: string, email: string, phone: string) => {
-    const result = await post(`auth/create`,
+    const result = await post(`admin/auth/create`,
         {
             fullname, email,  phone
         }

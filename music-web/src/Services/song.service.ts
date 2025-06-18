@@ -54,7 +54,7 @@ export const addHistory = async(songId: string) => {
 }
 
 export const create_song = async(fileaudio: File, title: string, genre: string, fileavatar: File, description: string, lyrics: string, artist: string[]) => {
-    const result = await post('song/create',{
+    const result = await post('admin/song/create',{
         fileaudio, title, genre, fileavatar, description, lyrics, artist
     })
     return result;
