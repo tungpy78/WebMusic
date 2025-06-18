@@ -1,7 +1,7 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './LayoutAdmin.scss';
 import './fontawesome';
-import {Outlet, useLocation, useNavigate} from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faTachometerAlt,
@@ -15,26 +15,44 @@ import {
     faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
 
+// Định nghĩa interface cho menu item
+interface MenuItem {
+    id: string;
+    name: string;
+    icon: any; // Có thể cải thiện bằng cách dùng kiểu từ @fortawesome
+    path?: string;
+    children?: { id: string; name: string; path: string }[];
+}
+
+// Định nghĩa interface cho user
+interface User {
+    userId: string;
+    phone: string;
+    role: string;
+    fullname: string;
+    email: string;
+}
+
 const LayoutAdmin = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const [selectedItem, setSelectedItem] = useState('');
-    const [openRoleAccount, setOpenRoleAccount] = useState(false);
-    // Khai báo biến state isCollapsed
-    const [isCollapsed, setIsCollapsed] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
+    const [selectedItem, setSelectedItem] = useState<string>('');
+    const [openRoleAccount, setOpenRoleAccount] = useState<boolean>(false);
+    const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+    const dropdownRef = useRef<HTMLDivElement | null>(null); // Chỉ định kiểu cho useRef
+    const user_current: User = JSON.parse(localStorage.getItem('user') || '{}');
+    const userRole = user_current?.role || 'Manager';
 
     useEffect(() => {
         const path = location.pathname;
 
         if (path === '/admin' || path === '/admin/') {
-            // Khi vô /admin thì chuyển sang /admin/dashboard
             setSelectedItem('dashboard');
             setOpenRoleAccount(false);
             navigate('/admin/dashboard', { replace: true });
             return;
         }
-        // Xác định selectedItem dựa trên path hiện tại
+
         if (path.startsWith('/admin/dashboard')) {
             setSelectedItem('dashboard');
             setOpenRoleAccount(false);
@@ -60,13 +78,12 @@ const LayoutAdmin = () => {
             setSelectedItem('album');
             setOpenRoleAccount(false);
         } else {
-            // Nếu path không khớp, reset chọn mục nào đó hoặc để trống
             setSelectedItem('');
             setOpenRoleAccount(false);
         }
     }, [location.pathname, navigate]);
 
-    const menuItems = [
+    const menuItems: MenuItem[] = [
         { id: 'dashboard', name: 'Dashboard', icon: faTachometerAlt, path: '/admin/dashboard' },
         {
             id: 'role-account', name: 'Vai trò & Tài khoản', icon: faUsersCog,
@@ -82,12 +99,15 @@ const LayoutAdmin = () => {
         { id: 'album', name: 'Album', icon: faCompactDisc, path: '/admin/album' }
     ];
 
-    // Click vào thẻ con
+    const filteredMenuItems = userRole === 'Admin'
+        ? menuItems
+        : menuItems.filter(item => !['dashboard', 'role-account', 'history-manager'].includes(item.id));
+
     const handleChildClick = (id: string) => {
         setSelectedItem(id);
     };
 
-    const [showDropdown, setShowDropdown] = useState(false);
+    const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
     const handleLogout = () => {
         localStorage.removeItem("user");
@@ -95,7 +115,7 @@ const LayoutAdmin = () => {
     };
 
     const handleProfile = () => {
-        navigate("/profile");
+        navigate("/admin/profile");
     };
 
     useEffect(() => {
@@ -137,7 +157,7 @@ const LayoutAdmin = () => {
                             onClick={() => setShowDropdown(prev => !prev)}
                         >
                             <img src="/avatar_admin.png" alt="Avatar" className="admin-header__avatar"/>
-                            <div className="admin-header__name">John Doe</div>
+                            <div className="admin-header__name">{user_current?.fullname || 'John Doe'}</div>
                             <FontAwesomeIcon icon={['fas', 'caret-down']} className="admin-header__caret"/>
                             {showDropdown && (
                                 <div className="admin-header__dropdown" ref={dropdownRef}>
@@ -158,7 +178,7 @@ const LayoutAdmin = () => {
                 <ul className="admin-body__sidebar" data-collapsed={isCollapsed}>
                     <li className="sidebar__title">Navigation</li>
 
-                    {menuItems.map(item => {
+                    {filteredMenuItems.map(item => {
                         const isActive = selectedItem === item.id || (item.children && item.children.some(c => c.id === selectedItem));
                         const isRoleAccount = item.id === 'role-account';
 
@@ -178,7 +198,6 @@ const LayoutAdmin = () => {
                                             }
                                         }
                                     }}
-
                                 >
                                     {(isActive || (isRoleAccount && openRoleAccount)) && (
                                         <div className="sidebar__choose"></div>
@@ -206,7 +225,6 @@ const LayoutAdmin = () => {
                                                         handleChildClick(child.id);
                                                         navigate(child.path);
                                                     }}
-
                                                 >
                                                     <div className="submenu__choose"></div>
                                                     <FontAwesomeIcon icon={faChevronRight}

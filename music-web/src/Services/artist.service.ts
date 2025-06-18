@@ -3,7 +3,7 @@ import { ArtistRequest } from "../models/artist.model";
 import { get, patchFormData, postFormData } from "../Utils/authorizedAxios";
 
 export const getArtist = async()=>{
-    const result = await get(`artist/getall`);
+    const result = await get(`admin/artist/getall`);
     return result;
 }
 

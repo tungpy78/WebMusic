@@ -54,21 +54,21 @@ export const addHistory = async(songId: string) => {
 }
 
 export const delete_song = async(songId: string) => {
-    const result = await patch(`song/delete/${songId}`,{
+    const result = await patch(`admin/song/delete/${songId}`,{
 
     });
     return result;
 }
 
 export const restore_song = async(songId: string) => {
-    const result = await patch(`song/restore/${songId}`,{
+    const result = await patch(`admin/song/restore/${songId}`,{
 
     });
     return result;
 }
 
 export const getAllSongAdmin = async() => {
-    const result = await get(`song/getAllAdmin`);
+    const result = await get(`admin/song/getAllAdmin`);
     return result;
 }
 
@@ -94,7 +94,7 @@ export const create_song = async (
     }
 
 
-    const result = await postFormData('song/create', formData, {
+    const result = await postFormData('admin/song/create', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
@@ -128,7 +128,7 @@ export const update_song = async (
     formData.append('description', description);
     formData.append('lyrics', lyrics);
 
-    const result = await patchFormData(`song/update/${song_id}`, formData, {
+    const result = await patchFormData(`admin/song/update/${song_id}`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },

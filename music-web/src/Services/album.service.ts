@@ -2,7 +2,7 @@ import { AlbumRequest } from "../models/album.model"
 import { get, patch, patchFormData, postFormData } from "../Utils/authorizedAxios"
 
 export const getAlbum = async()=>{
-    const result = await get(`album/albumForAdmin`)
+    const result = await get(`admin/album/albumForAdmin`)
     return result
 }
 
@@ -53,7 +53,6 @@ export const updateAlbum = async(album_id:string,albumRequest:AlbumRequest)=>{
             });
             return result;
 }
-
 
 export const getAllAlbum = async () => {
     const result = await get(`album`);
