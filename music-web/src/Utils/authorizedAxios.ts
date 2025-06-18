@@ -100,7 +100,7 @@ authorizedAxiosInstance.interceptors.response.use((response) => {
 
       const refreshToken = localStorage.getItem("refreshToken");
       console.log("refreshToken410", refreshToken);
-      return authorizedAxiosInstance.put(`${API_DOMAIN}auth/refresh-token`, { refreshToken })
+      return authorizedAxiosInstance.put(`${API_DOMAIN}/auth/refresh-token`, { refreshToken })
         .then((res) => {
         const accessToken = res.data.accessToken ;
           console.log("res410", res.data);

@@ -3,6 +3,11 @@ import { get, patch, patchFormData, post, postFormData } from "../Utils/authoriz
 
 
 export const getTopic = async () => {
+    const result = await get(`topic`);
+    return result;
+}
+
+export const getTopicAdmin = async () => {
     const result = await get(`topic/adminTopics`);
     return result;
 }
