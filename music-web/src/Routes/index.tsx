@@ -26,7 +26,8 @@ import Profile from "../Pages/Client/Profile.page";
 import Rank from "../Pages/Client/rank.page";
 import AlbumPage from "../Pages/Client/album.page";
 import AlbumDetail from "../Pages/Client/albumDetail";
-import ArtistPage from "../Pages/Client/artis.page";
+import ArtistPage from "../Pages/Client/artist.page";
+import Page404 from "../Pages/Client/page404";
 
 const getUser = () => {
     try {
@@ -115,7 +116,7 @@ export const routes =[
             {
                 path: "/artist/:artistId",
                 element: <ArtistPage />,
-            },
+            }
         ]
 
     },
@@ -188,5 +189,9 @@ export const routes =[
     {
         path: "/reset-password",
         element: <ResetPassword />,
+    },
+    {
+        path: "*",
+        element: <Page404 />
     }
 ]

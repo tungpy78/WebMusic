@@ -23,7 +23,7 @@ function LayoutDefault() {
         </Content>
       </Layout>
       <Layout>
-        <Footer className="layoutdefault__footer">
+        <Footer className="layoutdefault__footer" style={{padding:0}}>
           <FooterLayout />
         </Footer>
       </Layout>
