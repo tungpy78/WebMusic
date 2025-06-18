@@ -3,7 +3,7 @@ import { get, patch, patchFormData, post, postFormData } from "../Utils/authoriz
 
 
 export const getTopic = async () => {
-    const result = await get(`topic/adminTopics`);
+    const result = await get(`admin/topic/adminTopics`);
     return result;
 }
 
@@ -21,7 +21,7 @@ export const createTopic = async(topicRequest: TopicRequest) =>{
         formData.append("fileAvata", topicRequest.fileAvata);
     }
 
-    const result = await postFormData('topic/create', formData, {
+    const result = await postFormData('admin/topic/create', formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         }
@@ -38,7 +38,7 @@ export const updateTopic = async(topicId: string,topicRequest: TopicRequest) =>{
         formData.append("fileAvata", topicRequest.fileAvata);
     }
 
-    const result = await patchFormData(`topic/update/${topicId}`, formData, {
+    const result = await patchFormData(`admin/topic/update/${topicId}`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         }
@@ -47,11 +47,11 @@ export const updateTopic = async(topicId: string,topicRequest: TopicRequest) =>{
 }
 
 export const deleteTopic = async (topicId: string) => {
-    const result = await patch(`topic/delete/${topicId}`,{});
+    const result = await patch(`admin/topic/delete/${topicId}`,{});
     return result;
 }
 
 export const restoreTopic = async (topicId: string) => {
-    const result = await patch(`topic/restore/${topicId}`,{});
+    const result = await patch(`admin/topic/restore/${topicId}`,{});
     return result;
 }

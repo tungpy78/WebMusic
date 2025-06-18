@@ -3,7 +3,7 @@ import { ArtistRequest } from "../models/artist.model";
 import { get, patchFormData, postFormData } from "../Utils/authorizedAxios";
 
 export const getArtist = async()=>{
-    const result = await get(`artist/getall`);
+    const result = await get(`admin/artist/getall`);
     return result;
 }
 
@@ -16,7 +16,7 @@ export const createArtist = async(artistRequest:ArtistRequest)=>{
             formData.append("fileAvata", artistRequest.fileAvata);
         }
     
-        const result = await postFormData('artist/creat', formData, {
+        const result = await postFormData('admin/artist/creat', formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             }
@@ -33,7 +33,7 @@ export const updateArtist = async(artistId: string,artistRequest: ArtistRequest)
         formData.append("fileAvata", artistRequest.fileAvata);
     }
 
-    const result = await patchFormData(`artist/update/${artistId}`, formData, {
+    const result = await patchFormData(`admin/artist/update/${artistId}`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         }
