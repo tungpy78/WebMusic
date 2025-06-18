@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { createTopic, deleteTopic, getTopic, restoreTopic, updateTopic } from '../../Services/topic.service';
+import { createTopic, deleteTopic, getTopic, getTopicAdmin, restoreTopic, updateTopic } from '../../Services/topic.service';
 
 type TopicType = {
     _id: string,
@@ -30,7 +30,7 @@ const Topic = () => {
         useEffect(() => {
             const fethApi = async () => {
                 try {
-                    const result = await getTopic();
+                    const result = await getTopicAdmin();
                 
                     setTopics(result?.data);
                 } catch (error) {
@@ -61,7 +61,7 @@ const Topic = () => {
                 await updateTopic(topicId,newTopic);
                 alert('update thành công!');
             }
-            const updatedResult = await getTopic();
+            const updatedResult = await getTopicAdmin();
             setTopics(updatedResult.data);
             setTopicId('');
             setTopicName('');
@@ -95,7 +95,7 @@ const Topic = () => {
                 await deleteTopic(id);
                 alert('Xóa thành công!');
             }
-            const updatedResult = await getTopic();
+            const updatedResult = await getTopicAdmin();
             setTopics(updatedResult.data);
             setTopicId('');
         } catch (err) {
