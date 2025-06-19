@@ -28,7 +28,7 @@ export const search = async (keyword: string) => {
     return result;
 }
 
-export const addPlayList = async(songId: string,playListId: string) => {
+export const addPlayList = async(songId: string, playListId: string) => {
 
     const result = await post(`song/${songId}/playList`,
         {

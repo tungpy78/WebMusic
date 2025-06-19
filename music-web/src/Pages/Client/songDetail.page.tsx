@@ -207,6 +207,7 @@ function SongDetail() {
                         type="primary"
                         onClick={async () => {
                             try {
+                                console.log(playListId);
                                 const response = await addPlayList(songId, playListId);
                                 setIsModelPlayList(false)
                                 toast.success(response.data.message);
