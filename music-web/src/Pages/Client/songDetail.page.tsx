@@ -5,7 +5,7 @@ import "../../Layout/LayoutDefault/layoutdefault.scss"
 import { FolderAddOutlined, HeartOutlined, PauseOutlined, PlayCircleOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import { Song } from "../../models/song.model";
-import { addHistory, addPlayList, createPlayList, getSong } from "../../Services/song.service";
+import { addFavorite, addHistory, addPlayList, createPlayList, getSong } from "../../Services/song.service";
 import { Link, useParams } from "react-router-dom";
 import APlayer from "aplayer"; // Import APlayer
 import 'aplayer/dist/APlayer.min.css'; // Import CSS của APlayer
@@ -21,7 +21,6 @@ function SongDetail() {
     const [allPlayList, setAllPlayList] = useState<Playlist[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
-    const [isPlayList, setIsPlayList] = useState(false);
     const [isModelPlayList, setIsModelPlayList] = useState(false)
     const [playListId, setPlayListId] = useState("");
     const playerRef = useRef<InstanceType<typeof APlayer> | null>(null);
@@ -46,11 +45,6 @@ function SongDetail() {
             setIsFavorite(true);
         } else {
             setIsFavorite(false);
-        }
-        if(PlayList.length > 0){
-            setIsPlayList(true)
-        }else{
-            setIsPlayList(false)
         }
     }, [Favorite,PlayList]);
     
@@ -110,7 +104,7 @@ function SongDetail() {
     const handleAddFavorite = async () => {
         try {
             setIsFavorite(!isFavorite);
-            await addPlayList(songId, playListId);
+            await addFavorite(songId);
             setSong(prev => {
                 if (!prev) return prev;
                 return {
