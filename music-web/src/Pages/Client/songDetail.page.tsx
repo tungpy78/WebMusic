@@ -12,12 +12,14 @@ import 'aplayer/dist/APlayer.min.css'; // Import CSS của APlayer
 import TabPane from "antd/es/tabs/TabPane";
 import { Playlist } from "../../models/playList.model";
 import { toast, ToastContainer } from "react-toastify";
+import { getPlayList } from "../../Services/playlist.service";
 
 function SongDetail() {
     const [song,setSong] = useState<Song | null>(null);
     const params = useParams();
     const [Favorite, setFavorite] = useState([]);
     const [PlayList, setPlayList] = useState([]);
+    const [myPlayList, setMyPlayList] = useState<Playlist | null>(null);
     const [allPlayList, setAllPlayList] = useState<Playlist[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
@@ -29,16 +31,19 @@ function SongDetail() {
     const songId = params.songId as string;
     const fetchApi = async () => {
         const response = await getSong(songId)
-        
+        console.log("response.data",response.data);
         setSong(response.data.song)
         setFavorite(response.data.favorite)
         setPlayList(response.data.playList)
         setAllPlayList(response.data.allPlayList)
+        const mylist = await getPlayList();
+        setMyPlayList(mylist.data);
     }
 
     useEffect(() => {
         fetchApi();
     },[songId]);
+    
 
     useEffect(() => {
         if (Favorite.length > 0) {
@@ -207,8 +212,13 @@ function SongDetail() {
                         type="primary"
                         onClick={async () => {
                             try {
-                                console.log("playlistId",playListId);
-                                console.log("songId",songId);
+                                const selectedPlayList = allPlayList.find(p => p._id === playListId);
+
+                                if (selectedPlayList && selectedPlayList.songs.length >= 20) {
+                                    toast.warning("Playlist đã đạt tối đa 20 bài hát!");
+                                    return;
+                                }
+                                
                                 const response = await addPlayList(songId, playListId);
                                 setIsModelPlayList(false)
                                 toast.success(response.data.message);
@@ -229,6 +239,10 @@ function SongDetail() {
                         enterButton="Tạo"
                         onSearch={ async (value) => {
                             try {
+                                if(myPlayList && myPlayList.songs && myPlayList.songs.length >= 20){
+                                    toast.warning("Playlist đã đạt tối đa 20 bài hát!");
+                                    return;
+                                }
                                 await createPlayList(songId,value)
                                 setIsModelPlayList(false);
                                 toast.success(`Đã thêm vào PlayList ${value}`)

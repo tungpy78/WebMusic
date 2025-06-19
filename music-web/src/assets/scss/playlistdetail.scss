@@ -14,3 +14,7 @@
 .aplayer .aplayer-list ol li.aplayer-list-light {
     background:none;
 }
+.aplayer.aplayer-withlist .aplayer-list {
+  max-height: none !important;      // ❌ không giới hạn chiều cao
+  overflow-y: visible !important;   // ❌ không có thanh scroll
+}

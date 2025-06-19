@@ -42,6 +42,7 @@ function PlayListDetail() {
           url: song?.songId.audio,
           cover: song?.songId.avatar,
         })),
+        listMaxHeight: 9999,
         autoplay:true,
       });
 
@@ -108,9 +109,9 @@ function PlayListDetail() {
                             style={{ padding: "5px", background: "#170F23", border: "1px solid #231B2E" }}
                             />
                         </Col>
-                        <Col span={1} style={dataPlayList.songs.length > 1 ? { marginTop: "80px" } : {marginTop: "30px"}}>
+                        <Col span={1} style={dataPlayList.songs.length > 1 ? { marginTop: "80px"} : {marginTop: "30px"}}>
                             {dataPlayList.songs.map((item,index) => (
-                                <Button onClick={() => handleRemove(item.songId._id,dataPlayList._id)} key={index} danger><DeleteOutlined /></Button>
+                                <Button style={{marginTop:"1px"}} onClick={() => handleRemove(item.songId._id,dataPlayList._id)} key={index} danger><DeleteOutlined/></Button>
                             ))}
                         </Col>
                     </Row>
