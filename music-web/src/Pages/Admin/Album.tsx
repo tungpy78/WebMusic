@@ -5,6 +5,8 @@ import { getAllSong, getSongsByArtist } from '../../Services/song.service';
 import { getArtist } from '../../Services/artist.service';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ToastContainer, toast } from 'react-toastify';
+
 const AlbumStyles = () => (
     <style>
         {`
@@ -166,10 +168,10 @@ const Album = () => {
         try {
             if(iscreate){
                 await createAlbum(newAlbum);
-                alert('Tạo thành công!');
+                toast('Tạo thành công!');
             }else{              
                 await updateAlbum(albumId,newAlbum);
-                alert('update thành công!');
+                toast('update thành công!');
             }
             const updatedResult = await getAlbum();
             setAlbums(updatedResult.data);
@@ -178,7 +180,7 @@ const Album = () => {
             setiscreate(false);
         } catch (err) {
             console.error(err);
-            alert('Tạo thất bại:' + err);
+            toast('Tạo thất bại:' + err);
         }
     };
 
@@ -234,12 +236,12 @@ const Album = () => {
         await changeSong(newSongIds, albumId);
         const result = await getAlbum();
         setAlbums(result?.data);
-        alert("Lưu bài hát thành công.");
+        toast("Lưu bài hát thành công.");
         setShowFormAddSong(false); 
         clearForm();
         } catch (err) {
         console.error("Lỗi khi lưu bài hát:", err);
-        alert("Đã xảy ra lỗi. Không thể lưu bài hát.");
+        toast("Đã xảy ra lỗi. Không thể lưu bài hát.");
         }
     }
     //Chỉnh sửa album
@@ -255,8 +257,8 @@ const Album = () => {
 
     return (
         <>
+            <ToastContainer/>
             <AlbumStyles />
-
             <div className="album-container">
                 <div className="album-header">
                     <h2>Quản lý Album</h2>
@@ -324,8 +326,6 @@ const Album = () => {
                 </table>
             </div>
 
-
-
             {/* form add */}
             {showForm && (
                 <div style={{
@@ -338,7 +338,10 @@ const Album = () => {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    zIndex: 1010
+                    zIndex: 1010,
+                    overflowY: 'scroll',
+                    scrollbarWidth: 'none' as const,
+                    msOverflowStyle: 'none' as const,
                 }}>
                     <div style={{
                     width: '100%',

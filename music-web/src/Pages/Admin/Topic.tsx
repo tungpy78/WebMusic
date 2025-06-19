@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { createTopic, deleteTopic, getTopic, getTopicAdmin, restoreTopic, updateTopic } from '../../Services/topic.service';
+import { ToastContainer, toast } from 'react-toastify';
 
 type TopicType = {
     _id: string,
@@ -56,10 +57,10 @@ const Topic = () => {
         try {
             if(iscreate){
                 await createTopic(newTopic);
-                alert('Tạo thành công!');
+                toast('Tạo thành công!');
             }else{
                 await updateTopic(topicId,newTopic);
-                alert('update thành công!');
+                toast('update thành công!');
             }
             const updatedResult = await getTopicAdmin();
             setTopics(updatedResult.data);
@@ -73,7 +74,7 @@ const Topic = () => {
             setCurrentPage(Math.floor(topics.length / accountsPerPage));
         } catch (err) {
             console.error(err);
-            alert('Tạo thất bại:' + err);
+            toast('Tạo thất bại:' + err);
         } // chuyển tới trang mới
     };
 
@@ -90,17 +91,17 @@ const Topic = () => {
             if (!id) return;
             if (deleted) {
                 await restoreTopic(id); 
-                alert('Khôi phục thành công!');
+                toast('Khôi phục thành công!');
             } else {
                 await deleteTopic(id);
-                alert('Xóa thành công!');
+                toast('Xóa thành công!');
             }
             const updatedResult = await getTopicAdmin();
             setTopics(updatedResult.data);
             setTopicId('');
         } catch (err) {
             console.error(err);
-            alert('Thao tác thất bại:' + err);
+            toast('Thao tác thất bại:' + err);
         }
         
     };
@@ -116,6 +117,8 @@ const Topic = () => {
 
 
     return (
+        <>
+        <ToastContainer/>
         <div style={{width: '90%', maxHeight: '90%'}}>
             <div style={{
                 width: '100%',
@@ -409,6 +412,7 @@ const Topic = () => {
                 )}
             </div>
         </div>
+        </>
     );
 };
 

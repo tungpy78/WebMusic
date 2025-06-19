@@ -1,4 +1,4 @@
-import Slider from "react-slick";
+import Slider from "react-slick";   
 import { useEffect, useState } from "react";
 import { Song } from "../../models/song.model";
 import { getAllSong } from "../../Services/song.service";

@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { createArtist, getArtist, updateArtist } from '../../Services/artist.service';
 import { ArtistRequest, ArtistType } from '../../models/artist.model';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const Artist = () => {
@@ -43,11 +44,11 @@ const Artist = () => {
         try {
             if(iscreate){
                 await createArtist(newArtist);
-                alert('Tạo thành công!');
+                toast('Tạo thành công!');
             }else{
                 
                 await updateArtist(artistId,newArtist);
-                alert('update thành công!');
+                toast('update thành công!');
             }
             const updatedResult = await getArtist();
             setArtist(updatedResult.data);
@@ -61,7 +62,7 @@ const Artist = () => {
             setCurrentPage(Math.floor(artist.length / accountsPerPage));
         } catch (err) {
             console.error(err);
-            alert('Tạo thất bại:' + err);
+            toast('Tạo thất bại:' + err);
         }
     };
 
@@ -83,6 +84,8 @@ const Artist = () => {
 
 
     return (
+        <>
+        <ToastContainer/>
         <div style={{width: '90%', maxHeight: '90%'}}>
             <div style={{
                 width: '100%',
@@ -333,6 +336,7 @@ const Artist = () => {
                 )}
             </div>
         </div>
+        </>
     );
 };
 
