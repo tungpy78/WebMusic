@@ -110,7 +110,7 @@ const Songs = () => {
             }
         };
         fetchData();
-    }, [showUpdateForm]);
+    }, [showUpdateForm, songs.length]);
 
     // Handle input changes
     const handleInputChange = (

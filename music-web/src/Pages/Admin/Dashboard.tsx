@@ -143,7 +143,7 @@ const Dashboard: React.FC = () => {
 
     return (
         <div style={{ width: '95%', height: '100vh' ,padding: '30px', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9'}}>
-            <h2 style={{ marginBottom: '30px' }}>Bảng điều khiển</h2>
+            <h2 style={{ marginBottom: '30px', paddingTop: '10px' }}>Bảng thống kê</h2>
 
             <div style={{
                 display: 'flex',
