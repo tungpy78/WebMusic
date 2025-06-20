@@ -32,13 +32,13 @@ function Rank(){
             <Col span={24} key={song._id}>
                 <Link to={`/song/${song._id}`}>
                    <Row className="rank__item" align="middle" style={{ padding: "5px", border: "1px solid #231B2E", borderRadius: "5px"}}>
-                    <Col xs={1}>
-                        <h1>{index + 1}</h1>
+                    <Col xs={2}>
+                        <h2>{index + 1}</h2>
                     </Col>
                     <Col xs={1}>
                     -
                     </Col>
-                    <Col xs={22} style={{ display: "flex", alignItems: "center" }}>
+                    <Col xs={21} style={{ display: "flex", alignItems: "center" }}>
                         <img src={song.avatar} alt={song.title} style={{ width: "50px", height: "50px", marginRight: "10px", objectFit: "cover" }} />
                         <div>
                             <h4 style={{ margin: 0 , color: "white"}}>{song.title}</h4>

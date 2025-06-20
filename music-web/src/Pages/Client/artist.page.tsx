@@ -75,7 +75,7 @@ const ArtistPage = () => {
         </Row>
         <h2>Album</h2>
         {dataArtist?.albums.length ? (
-            <Row gutter={[16, 16]} style={{ margin: '20px' }}>
+            <Row gutter={[16, 16]}>
                 {dataArtist.albums.map((album) => (
                     <Col xs={24} md={12} lg={8} key={album._id} className="album__card">
                         <Link to={`/album/${album._id}`}>
