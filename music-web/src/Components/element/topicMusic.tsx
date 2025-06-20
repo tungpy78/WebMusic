@@ -29,7 +29,7 @@ function TopicMusic(){
         {topics.length > 0 ? (
             <>
             <h2>Thể loại</h2>
-            <Row gutter={[10, 10]} className="topic__list">
+            <Row gutter={[16, 16]} className="topic__list">
                 {topics.map((item) => (
                     <Col key={item._id} xs={24} sm={12} md={12} lg={8} xl={6}>
                         <div className="topic__item">

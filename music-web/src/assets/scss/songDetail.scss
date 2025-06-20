@@ -24,3 +24,12 @@
     border: 1px solid #312541;
     border-radius: 6px ;
 }
+@media (max-width: 575.98px) {
+    .inner__image{
+        width: auto;
+        height: 150px;
+    }
+    .button{
+        padding: 0; 
+    }
+}

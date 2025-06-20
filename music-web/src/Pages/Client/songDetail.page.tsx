@@ -133,7 +133,7 @@ function SongDetail() {
             <Row gutter={[16, 16]} className="songDetail__container">
                 {song && 
                 (<>
-                    <Col span={6} key={song._id} style={{ textAlign: "center" }}>
+                    <Col xs={8} md={6}  key={song._id} style={{ textAlign: "center" }}>
                     <div className="inner__image">
                         <img src={song.avatar} alt={song.title} />
                     </div>
@@ -151,13 +151,13 @@ function SongDetail() {
                         <p>{song.like} người yêu thích</p>
                     </div>
                     <div>
-                        <Button onClick={handlePlay} icon={isPlaying ? <PauseOutlined /> : <PlayCircleOutlined />} style={{marginTop: "10px"}} >{isPlaying ? "Dừng" : "Phát"}</Button>
-                        <Button onClick={handleAddFavorite} icon={<HeartOutlined />} style={{marginTop: "10px"}} >{isFavorite ? "Đã yêu thích" : "Yêu thích"}</Button>
-                        <Button onClick={handlePlayList} icon={<FolderAddOutlined />} style={{marginTop: "10px"}} >Thêm vào Playlist</Button>
+                        <Button className="button" onClick={handlePlay} icon={isPlaying ? <PauseOutlined /> : <PlayCircleOutlined />} style={{marginTop: "10px"}} >{isPlaying ? "Dừng" : "Phát"}</Button>
+                        <Button className="button" onClick={handleAddFavorite} icon={<HeartOutlined />} style={{marginTop: "10px"}} >{isFavorite ? "Đã yêu thích" : "Yêu thích"}</Button>
+                        <Button className="button" onClick={handlePlayList} icon={<FolderAddOutlined />} style={{marginTop: "10px"}} >Thêm vào Playlist</Button>
                     </div>
                     </Col>
                 </>)}
-                <Col span={18}>
+                <Col xs={16} md={18}>
                     <div id="aplayer" style={{padding:"5px", background:"#170F23" , border:"1px solid #231B2E"}}>
 
                     </div>
