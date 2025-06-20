@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { UserOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
 import { userService } from "../../Services/userService";
 import { toast, ToastContainer } from "react-toastify";
+import "../../assets/scss/login.scss";
 
 function Profile() {
   const user = JSON.parse(localStorage.getItem("user") || "null");
@@ -46,7 +47,7 @@ function Profile() {
     <>
     <ToastContainer />
     <Row justify="center" style={{ marginTop: 50 }}>
-      <Col xs={24} md={12}>
+      <Col md={12}>
         <Card
           title="Thông tin cá nhân"
           bordered={false}
