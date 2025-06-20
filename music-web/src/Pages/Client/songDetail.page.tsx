@@ -153,7 +153,7 @@ function SongDetail() {
                     <div>
                         <Button className="button" onClick={handlePlay} icon={isPlaying ? <PauseOutlined /> : <PlayCircleOutlined />} style={{marginTop: "10px"}} >{isPlaying ? "Dừng" : "Phát"}</Button>
                         <Button className="button" onClick={handleAddFavorite} icon={<HeartOutlined />} style={{marginTop: "10px"}} >{isFavorite ? "Đã yêu thích" : "Yêu thích"}</Button>
-                        <Button className="button" onClick={handlePlayList} icon={<FolderAddOutlined />} style={{marginTop: "10px"}} >Thêm vào Playlist</Button>
+                        <Button className="button" onClick={handlePlayList} icon={<FolderAddOutlined />} style={{marginTop: "10px"}} >Playlist</Button>
                     </div>
                     </Col>
                 </>)}
