@@ -5,19 +5,21 @@ import './layoutdefault.scss';
 import HeaderLayout from "./Header";
 import FooterLayout from "./Footer";
 import { Outlet } from "react-router-dom";
+import { useState } from "react";
 
 
 function LayoutDefault() {
+  const [showSider, setShowSider] = useState(true);
   return (
     <>
     <Layout className="layoutdefault">
       <Header className="layoutdefault__header">
-          <HeaderLayout />
+        <HeaderLayout setShowSider={setShowSider} showSider={showSider} />
       </Header>
       <Layout className="layoutdefault__main">
-        <Sider className="layoutdefault__sider">
+        <div className={`layoutdefault__sider ${showSider ? "" : "hidden"}`}>
           <SiderLayout />
-        </Sider>
+        </div>
         <Content className="layoutdefault__content">
           <Outlet />
         </Content>

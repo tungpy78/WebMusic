@@ -5,20 +5,21 @@
     &__list{
         display: flex;
         flex-wrap: wrap;
-        padding: 1rem;
+        gap: 20px;
         border-radius: 0.5rem;
     }
     &__item{
         display: flex;
         position: relative;
-        margin-right: 40px;
-        width: calc(100% / 3 - 80px / 3);
+        width: calc(100% / 3 - 20px * 2 / 3);
         align-items: center;
         padding: 5px;
         cursor: pointer;
         overflow: hidden;
+
         &--image{
-            width: 70px;
+            max-width: 70px;
+            min-width: 70px;
             height: 70px;
             border-radius: 0.5rem;
             margin-right: 20px;
@@ -26,6 +27,11 @@
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+            }
+            @media (max-width: 575.98px) {
+                max-width: 50px;
+                min-width: 50px;
+                height: 50px;
             }
               
             &::after {
@@ -67,6 +73,16 @@
         &:nth-child(3n){
             margin-right: 0;
         }
+        @media (max-width: 575.98px) {
+            &--title{
+                h4{
+                    font-size: 14px;
+                }
+                p{
+                    font-size: 13px;
+                }
+            }
+        }
 
         .play-button {
             position: absolute;
@@ -90,6 +106,22 @@
           }
 
         
+    }
+    &__item:nth-child(3n){
+        margin-right: 0;
+    }
+    @media (max-width: 991.98px) {
+        &__item{
+             width: calc(100% / 2 - 40px / 2);
+        }
+        &__item:nth-child(2n){
+            margin-right: 0;
+        }
+    }
+    @media (max-width: 575.98px) {
+        &__item{
+             width:100%;
+        }
     }
 
 }
@@ -118,26 +150,33 @@
             object-fit: cover;
         }
     }
+    @media (max-width: 991.98px) {
+    .carousel__image-wrapper {
+        height: 250px;
+    }
+    }
 }
 
 .topic__list{
     display: flex;
+    
 }   
 .topic__item{
     padding: 10px;
     border: 1px solid #2F2739;
     overflow: hidden;
     border-radius: 6px;
-    height:100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     
     &--image{
         width: 100%;
-        height: auto;
+        height: 100%;
         img{
             width: 100%;
             height: 100%;
             object-fit: cover;
-            background-size: auto;
         }
     }
     &:hover{
@@ -147,5 +186,21 @@
         .topic__item--image img {
             transform: scale(1.05); // phóng to nhẹ ảnh
         }
+    }
+}
+@media (max-width: 991.98px) {
+    .topic__item{
+        width: 80%;
+        height: auto;
+
+        &--image{
+        width: 100%;
+        height: 100px;
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
     }
 }

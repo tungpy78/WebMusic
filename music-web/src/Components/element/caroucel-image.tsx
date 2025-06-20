@@ -30,14 +30,21 @@ function CarouselImage() {
         arrows: true,
         dots: false,
         responsive: [
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 1,
-                    centerPadding: "40px",
-                }
+        {
+            breakpoint: 768,
+            settings: {
+                slidesToShow: 1,
+                centerPadding: "40px",
             }
-        ]
+        },
+        {
+            breakpoint: 576, // 👈 THÊM ĐIỀU NÀY
+            settings: {
+                slidesToShow: 1,
+                centerPadding: "20px",
+            }
+        }
+    ]
     };
 
     return (

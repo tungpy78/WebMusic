@@ -46,7 +46,7 @@ function Profile() {
     <>
     <ToastContainer />
     <Row justify="center" style={{ marginTop: 50 }}>
-      <Col span={12}>
+      <Col xs={24} md={12}>
         <Card
           title="Thông tin cá nhân"
           bordered={false}
@@ -54,7 +54,7 @@ function Profile() {
         >
           <div style={{ display: "flex", alignItems: "center", marginBottom: 24 }}>
             <Avatar
-              size={100}
+              size={50}
               icon={<UserOutlined />}
               src={user?.avatar || undefined}
               style={{ marginRight: 24 }}

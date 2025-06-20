@@ -34,7 +34,7 @@ function Library(){
             <>
                 <Row gutter={[20,20]}>
                     {playlist.map((item,index) => (
-                        <Col span={6} key={item._id} className="playlist" style={{border: "1px solid #231B2E",borderRadius:"8px",marginRight:"10px"}}>
+                        <Col xs={24} sm={12} md={8} lg={6} xl={6} key={item._id} className="playlist" style={{border: "1px solid #231B2E",borderRadius:"8px",marginRight:"10px"}}>
                             <Link to={`/playlist/${item._id}`}>
                                 <div className="inner--image">
                                     <img src={

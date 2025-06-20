@@ -26,12 +26,12 @@ const ArtistPage = () => {
   return (
     <>
         <Row gutter={[16, 16]} style={{ marginTop: '20px' }} className="artist__page">
-            <Col span={6}>
+            <Col xs={24} md={10} lg={6}>
                 <div className="artist--image">
                     <img src={dataArtist?.imageUrl} alt={dataArtist?.name} />
                 </div>
             </Col>
-            <Col span={18}>
+            <Col xs={24} md={14} lg={18}>
                 <div className="artist-info">
                     <h1>{dataArtist?.name} <PlayCircleOutlined /></h1>
                     <p>{dataArtist?.bio}</p>
@@ -39,9 +39,9 @@ const ArtistPage = () => {
             </Col>
         </Row>
         <h2>Bài hát nổi bật</h2>
-        <Row gutter={[16,0]} className="inner__list">
+        <Row gutter={[16,16]} className="inner__list">
             {dataArtist?.songs.map((song) => (
-                <Col span={11} key={song._id} className="inner__item">
+                <Col xs={24} md={11} key={song._id} className="inner__item">
                     <Link
                       to={`/song/${song._id}`}
                       style={{
@@ -77,7 +77,7 @@ const ArtistPage = () => {
         {dataArtist?.albums.length ? (
             <Row gutter={[16, 16]} style={{ margin: '20px' }}>
                 {dataArtist.albums.map((album) => (
-                    <Col span={8} key={album._id} className="album__card">
+                    <Col xs={24} md={12} lg={8} key={album._id} className="album__card">
                         <Link to={`/album/${album._id}`}>
                         <div className="album__card--image">
                             <img src={album.avatar} alt={album.album_name} />   

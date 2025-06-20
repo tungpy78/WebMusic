@@ -1,7 +1,10 @@
 .artist__page{
     display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
+    text-align: center;
     background-image: linear-gradient(to right, #6441A5, #2a0845);
     border-radius: 6px;
     width:  100%;
@@ -11,7 +14,7 @@
     width: 200px;   
     height: 200px;
     border-radius: 50%;
-    margin-left: 50px;
+    margin: auto;
     cursor: pointer;
     img{
         width: 100%;
@@ -24,5 +27,8 @@
         }
     }
 
+    }
+    .artist--info{
+        text-align: center;
     }
 }

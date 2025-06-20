@@ -4,12 +4,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { search } from "../../Services/song.service";
 import { Song } from "../../models/song.model";
-import { EditOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import { BarsOutlined, EditOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import Modal from "antd/es/modal/Modal";
 import { userService } from "../../Services/userService";
 import { toast, ToastContainer } from "react-toastify";
 
-function HeaderLayout(){
+type HeaderLayoutProps = {
+  setShowSider: React.Dispatch<React.SetStateAction<boolean>>;
+  showSider: boolean;
+};
+
+function HeaderLayout({ setShowSider, showSider }: HeaderLayoutProps){
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const [options, setOptions] = useState<{value: string, label: React.ReactNode}[]>([]);
   const navigate = useNavigate();
@@ -102,12 +107,18 @@ function HeaderLayout(){
       <div className="layoutdefault__header--logo">
         <img src={Logo} alt="logo" />
       </div>
-      <div className="layoutdefault__header--search" style={{ width: 400 }}>
+      <button 
+        className="layoutdefault__toggle" 
+        onClick={() => setShowSider(!showSider)}
+      >
+        <BarsOutlined />
+      </button>
+      <div className="layoutdefault__header--search">
         <AutoComplete
         options={options}
-        style={{ width: "100%" }}
+        style={{ width: "100%"}}
         onSearch={handleSearch}
-        placeholder="Tìm kiếm bài hát, nghệ sĩ, lời bài hát..."
+        placeholder="Tìm kiếm bài hát, nghệ sĩ"
         allowClear
         dropdownStyle={{
         maxHeight: 300, // Giới hạn chiều cao dropdown

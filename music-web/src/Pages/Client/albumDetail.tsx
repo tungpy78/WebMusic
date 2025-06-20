@@ -92,8 +92,8 @@ function AlbumDetail() {
                 dataAlbum.songs.length === 0 ? (
                     <><h1>Danh sách trống</h1></>
                 ) : (
-                    <Row gutter={[10,10]}>
-                        <Col span={6} style={{ textAlign: "center" }}>
+                    <Row gutter={[16,16]}>
+                        <Col xs={24} md={8} lg={6} style={{ textAlign: "center" }}>
                             <div className="playlist-image">
                                 <img src={dataAlbum.avatar} alt={dataAlbum.album_name} />
                             </div>
@@ -101,7 +101,7 @@ function AlbumDetail() {
                             <Link  to={`/artist/${dataAlbum.artist._id}`}><p>{dataAlbum.artist?.name}</p></Link>
                             <Button onClick={handlePlay}>{isPlaying ? "Tạm dừng" : "Phát tất cả"}</Button>
                         </Col>
-                        <Col span={17}>
+                        <Col xs={24} md={16} lg={18}>
                             <div
                             ref={aplayerContainerRef}
                             style={{ padding: "5px", background: "#170F23", border: "1px solid #231B2E" }}

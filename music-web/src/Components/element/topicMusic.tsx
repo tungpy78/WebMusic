@@ -29,7 +29,7 @@ function TopicMusic(){
         {topics.length > 0 ? (
             <>
             <h2>Thể loại</h2>
-            <Row gutter={[20, 20]} className="topic__list">
+            <Row gutter={[10, 10]} className="topic__list">
                 {topics.map((item) => (
                     <Col key={item._id} xs={24} sm={12} md={12} lg={8} xl={6}>
                         <div className="topic__item">
@@ -40,7 +40,7 @@ function TopicMusic(){
                                 <h4>{item.title}</h4>
                                 <p>{item.description}</p>
                             </div>
-                            <Button>
+                            <Button style={{marginTop: "auto", width: "100px"}}>
                                 <Link to={`/topic/${item._id}`}>Xem chi tiết</Link>
                             </Button>
                         </div>

@@ -21,9 +21,9 @@ const AlbumPage = () => {
     return (
         <div>
             <h1>Album Page</h1>
-            <Row gutter={[16, 16]} style={{ margin: '20px' }}>
+            <Row gutter={[5, 5]} style={{ margin: '20px' }}>
                 {albumId.map((album) => (
-                    <Col span={8} key={album._id} className="album__card">
+                    <Col xs={24} md={12} lg={12} xl={8} key={album._id} className="album__card">
                         <Link to={`/album/${album._id}`}>
                         <div className="album__card--image">
                             <img src={album.avatar} alt={album.album_name} />   
