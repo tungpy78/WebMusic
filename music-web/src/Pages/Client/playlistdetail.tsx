@@ -94,7 +94,7 @@ function PlayListDetail() {
                 dataPlayList.songs.length === 0 ? (
                     <><h1>Danh sách trống</h1></>
                 ) : (
-                    <Row gutter={[10,10]}>
+                    <Row>
                         <Col xs={24} md={8} lg={6} style={{ textAlign: "center" }}>
                             <div className="playlist-image">
                                 <img src={dataPlayList.songs[0].songId.avatar} alt={dataPlayList.name} />
@@ -103,15 +103,15 @@ function PlayListDetail() {
                             <p>Tạo bởi {dataPlayList.userFullname || "Unknown"}</p>
                             <Button onClick={handlePlay}>{isPlaying ? "Tạm dừng" : "Phát tất cả"}</Button>
                         </Col>
-                        <Col xs={23} md={14} lg={17}>
+                        <Col xs={22} md={14} lg={17}>
                             <div
                             ref={aplayerContainerRef}
                             style={{ padding: "5px", background: "#170F23", border: "1px solid #231B2E" }}
                             />
                         </Col>
-                        <Col xs={1} style={dataPlayList.songs.length > 1 ? { marginTop: "80px"} : {marginTop: "30px"}}>
+                        <Col xs={2} style={dataPlayList.songs.length > 1 ? { marginTop: "80px"} : {marginTop: "30px"}}>
                             {dataPlayList.songs.map((item,index) => (
-                                <Button style={{marginTop:"1px"}} onClick={() => handleRemove(item.songId._id,dataPlayList._id)} key={index} danger><DeleteOutlined/></Button>
+                                <Button style={{marginTop:"1px", padding:"1px 5px"}} onClick={() => handleRemove(item.songId._id,dataPlayList._id)} key={index} danger><DeleteOutlined/></Button>
                             ))}
                         </Col>
                     </Row>
