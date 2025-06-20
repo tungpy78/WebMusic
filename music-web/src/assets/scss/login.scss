@@ -37,10 +37,13 @@ html, body {
       font-weight: 500;
     }
 
-    .ant-input,
-    .ant-input-password {
+    .ant-input{
       border-radius: 10px;
       padding: 10px;
+    }
+    .ant-input-password {
+      border-radius: 10px;
+      padding: 1px !important;
     }
 
     .ant-input::placeholder {
@@ -91,4 +94,21 @@ html, body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+@media (max-width: 575.98px) {
+    .ant-card {
+      width: 300px !important;
+      margin-top: 50px !important;
+    }
+    .ant-card-body{
+      padding: 10px !important;
+    }
+    .ant-input,
+    .ant-input-password {
+      padding: 5px !important;
+    }
+    .forgot-password{
+      width: 300px !important;
+      padding: 10px !important;
+    }
 }

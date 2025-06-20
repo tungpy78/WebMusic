@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { userService } from "../../Services/userService";
+import "../../assets/scss/login.scss";
 
 function ResetPassword(){
     const location = useLocation();
@@ -37,6 +38,7 @@ function ResetPassword(){
         onFinish={handleSubmit} 
         layout="vertical"
         name="form-reset-password"
+        className="forgot-password"
         initialValues={{ remember: true }}
         style={{ maxWidth: 500, margin: 'auto', padding: '50px', background: "white", borderRadius: '8px', marginTop: "100px", textAlign: 'center' }}
         >

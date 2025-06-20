@@ -24,7 +24,7 @@ function Register(){
         <>
          <ToastContainer />
         <div className="register-page">
-            <Card style={{ width: 400, margin: 'auto', marginTop: '100px', padding: '20px' }}>
+            <Card style={{ width: 400, margin: 'auto', marginTop: '100px'}}>
                 <Form layout="vertical" name="FormLogin" onFinish={handleSubmit}>
                     <h1 style={{textAlign:"center"}}>Register</h1>
                     <Form.Item

@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { useEffect, useState } from "react";
 import OTPCountdown from "../../Components/element/OTPCountdown";
-import { error } from "console";
+import "../../assets/scss/login.scss";
 
 const { Title } = Typography;
 type OTPProps = GetProps<typeof Input.OTP>;
@@ -76,6 +76,7 @@ const VerifyOtp = () =>{
         <Form
         name="form-verify-otp"
         onFinish={HandleSubmit}
+        className="forgot-password"
         style={{margin:"auto", padding:"50px", textAlign:"center", background:"white", borderRadius:"8px", width:"400px", marginTop:"100px"}}>
             <Title level={2}>Nhập Mã OTP</Title>
             <FormItem

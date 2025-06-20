@@ -3,6 +3,7 @@ import { userService } from "../../Services/userService";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import "../../assets/scss/login.scss"
 
 const ForgotPassword = () => {
     const Navigate = useNavigate();
@@ -36,6 +37,7 @@ const ForgotPassword = () => {
               name="forgot-password"
               initialValues={{ remember: true }}
               onFinish={handleSubmit}
+              className="forgot-password"
               style={{ maxWidth: 400, margin: 'auto', padding: '50px',background:"white", borderRadius: '8px' , marginTop: "100px", textAlign: 'center' }}
        >    
                 <h2 style={{ textAlign: 'center' }}>Forgot Password</h2>
