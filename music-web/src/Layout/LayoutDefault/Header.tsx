@@ -106,13 +106,13 @@ function HeaderLayout({ setShowSider, showSider }: HeaderLayoutProps){
 
       <div className="layoutdefault__header--logo">
         <img src={Logo} alt="logo" />
-      </div>
-      <button 
+        <button 
         className="layoutdefault__toggle" 
         onClick={() => setShowSider(!showSider)}
       >
         <BarsOutlined />
       </button>
+      </div>
       <div className="layoutdefault__header--search">
         <AutoComplete
         options={options}
