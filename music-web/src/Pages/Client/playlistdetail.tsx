@@ -103,15 +103,15 @@ function PlayListDetail() {
                             <p>Tạo bởi {dataPlayList.userFullname || "Unknown"}</p>
                             <Button onClick={handlePlay}>{isPlaying ? "Tạm dừng" : "Phát tất cả"}</Button>
                         </Col>
-                        <Col xs={22} md={14} lg={17}>
+                        <Col xs={22} md={14} lg={16}>
                             <div
                             ref={aplayerContainerRef}
                             style={{ padding: "5px", background: "#170F23", border: "1px solid #231B2E" }}
                             />
                         </Col>
-                        <Col xs={2} style={dataPlayList.songs.length > 1 ? { marginTop: "80px"} : {marginTop: "30px"}}>
+                        <Col xs={2}style={dataPlayList.songs.length > 1 ? { marginTop: "80px"} : {marginTop: "30px"}}>
                             {dataPlayList.songs.map((item,index) => (
-                                <Button style={{marginTop:"1px", padding:"1px 5px"}} onClick={() => handleRemove(item.songId._id,dataPlayList._id)} key={index} danger><DeleteOutlined/></Button>
+                                <Button style={{marginTop:"1px", padding:"1px 5px", display:"block"}} onClick={() => handleRemove(item.songId._id,dataPlayList._id)} key={index} danger><DeleteOutlined/></Button>
                             ))}
                         </Col>
                     </Row>
