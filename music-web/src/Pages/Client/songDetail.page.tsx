@@ -153,7 +153,7 @@ function SongDetail() {
             };
         }
         
-    }, [song]); // Thêm relatedSongs và navigate vào dependency
+    }, [relatedSongs]); // Thêm relatedSongs và navigate vào dependency
 
 
     const handlePlay = () => playerRef.current?.toggle();
