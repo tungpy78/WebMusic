@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { changeSong, createAlbum, getAlbum, updateAlbum } from '../../Services/album.service';
 import { AlbumRequest, AlbumResponsor, ArtistAdmin, SongAdmin } from '../../models/album.model';
-import { getAllSong, getSongsByArtist } from '../../Services/song.service';
+import { getRankingsPaginated, getSongsByArtist } from '../../Services/song.service';
 import { getArtist } from '../../Services/artist.service';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

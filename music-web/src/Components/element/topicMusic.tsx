@@ -32,18 +32,17 @@ function TopicMusic(){
             <Row gutter={[16, 16]} className="topic__list">
                 {topics.map((item) => (
                     <Col key={item._id} xs={24} sm={12} md={12} lg={8} xl={6}>
-                        <div className="topic__item">
-                            <div className="topic__item--image">
-                                <img src={item.avatar} alt={item.title} />
+                        <Link to={`/topic/${item._id}`}>
+                            <div className="topic__item">
+                                <div className="topic__item--image">
+                                    <img src={item.avatar} alt={item.title} />
+                                </div>
+                                <div className="title">
+                                    <h2>{item.title}</h2>
+                                    <p>{item.description}</p>
+                                </div>
                             </div>
-                            <div className="title">
-                                <h4>{item.title}</h4>
-                                <p>{item.description}</p>
-                            </div>
-                            <Button style={{marginTop: "auto", width: "100px"}}>
-                                <Link to={`/topic/${item._id}`}>Xem chi tiết</Link>
-                            </Button>
-                        </div>
+                        </Link>
                     </Col>
                 ))}
             </Row>

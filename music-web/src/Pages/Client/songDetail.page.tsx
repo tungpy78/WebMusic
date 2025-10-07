@@ -6,43 +6,59 @@ import { FolderAddOutlined, HeartOutlined, PauseOutlined, PlayCircleOutlined } f
 import { useEffect, useRef, useState } from "react";
 import { Song } from "../../models/song.model";
 import { addFavorite, addHistory, addPlayList, createPlayList, getSong } from "../../Services/song.service";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import APlayer from "aplayer"; // Import APlayer
 import 'aplayer/dist/APlayer.min.css'; // Import CSS của APlayer
 import TabPane from "antd/es/tabs/TabPane";
 import { Playlist } from "../../models/playList.model";
 import { toast, ToastContainer } from "react-toastify";
 import { getPlayList } from "../../Services/playlist.service";
+import { postRelatedSongs } from "../../Services/recomandation.service";
+import CarouselImage from "../../Components/element/caroucel-image";
 
 function SongDetail() {
     const [song,setSong] = useState<Song | null>(null);
+    const [relatedSongs, setRelatedSongs] = useState<Song[]>([]);
     const params = useParams();
+    const navigate = useNavigate(); 
     const [Favorite, setFavorite] = useState([]);
     const [PlayList, setPlayList] = useState([]);
     const [myPlayList, setMyPlayList] = useState<Playlist | null>(null);
     const [allPlayList, setAllPlayList] = useState<Playlist[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
+
+    // --- THAY ĐỔI 1: Tách state của "like" ra riêng ---
+    const [likeCount, setLikeCount] = useState(0);
+
     const [isModelPlayList, setIsModelPlayList] = useState(false)
     const [playListId, setPlayListId] = useState("");
     const playerRef = useRef<InstanceType<typeof APlayer> | null>(null);
+    const sessionHistoryRef = useRef<string[]>([]);
     
 
     const songId = params.songId as string;
     const fetchApi = async () => {
-        const response = await getSong(songId)
-        console.log("response.data",response.data);
-        setSong(response.data.song)
-        setFavorite(response.data.favorite)
-        setPlayList(response.data.playList)
-        setAllPlayList(response.data.allPlayList)
-        const mylist = await getPlayList();
-        setMyPlayList(mylist.data);
-    }
-
+            try {
+                const response = await getSong(songId);
+                await addHistory(songId);
+                setSong(response.data.song);
+                setFavorite(response.data.favorite);
+                setAllPlayList(response.data.allPlayList);
+            } catch (error) {
+                console.error("Lỗi khi tải thông tin bài hát:", error);
+            }
+        };
     useEffect(() => {
         fetchApi();
-    },[songId]);
+
+        // --- THAY ĐỔI 5: Thêm bài hát hiện tại vào lịch sử phiên ---
+        // Cập nhật lịch sử phiên nghe
+        const updatedHistory = [...sessionHistoryRef.current, songId].slice(-10); // Luôn giữ 10 bài gần nhất
+        sessionHistoryRef.current = updatedHistory;
+        console.log("Lịch sử 10 bài gần nhất:", sessionHistoryRef.current);
+
+    }, [songId]); // Hook này chạy mỗi khi URL thay đổi (tức là khi chuyển bài)
     
 
     useEffect(() => {
@@ -52,8 +68,35 @@ function SongDetail() {
             setIsFavorite(false);
         }
     }, [Favorite,PlayList]);
-    
+
+    const fetchApiRelatedSongs = async () => {
+        try {
+            // Gọi API để lấy danh sách bài hát liên quan
+            // Bạn có thể bỏ dòng getPlayList() nếu không cần thiết ở đây
+                const relatedResponse = await postRelatedSongs(
+                    songId,
+                    sessionHistoryRef.current  // Chỉ cần loại trừ bài hát hiện tại
+                );
+                setRelatedSongs(relatedResponse.data);
+                console.log("Bài hát liên quan:", relatedResponse.data);
+        } catch (error) {
+            console.error("Lỗi khi tải bài hát liên quan:", error);
+        }
+    };
+
     useEffect(() => {
+        if (song) {
+            fetchApiRelatedSongs();
+        }
+    }, [song]);
+    console.log("relatedSongs0",relatedSongs);
+ 
+
+    useEffect(() => {
+         // Hủy player cũ trước khi tạo cái mới
+        if (playerRef.current) {
+            playerRef.current.destroy();
+        }
         if (song) {
             // Khởi tạo APlayer khi có song
             const player = new APlayer({
@@ -68,14 +111,41 @@ function SongDetail() {
                         cover: song.avatar, // Đảm bảo ảnh bìa chính xác
                     },
                 ],
-                autoplay:true,
+                autoplay: true,
+                preload: 'auto',
+
                 
             });
             playerRef.current = player;
             // Đồng bộ trạng thái với APlayer
             player.on("play", () => setIsPlaying(true));
             player.on("pause", () => setIsPlaying(false));
-            player.on("ended", () => setIsPlaying(false));
+             // --- THAY ĐỔI 6: LOGIC CHUYỂN TRANG THÔNG MINH ---
+            player.on('ended', async () => {
+                setIsPlaying(false);
+                 // --- DÒNG CODE FIX LỖI ---
+                if (playerRef.current) {
+                    playerRef.current.pause();
+                }
+                console.log('Bài hát đã kết thúc, đang tìm bài hát tiếp theo...');
+
+                try {
+                    console.log("relatedSongs1:", relatedSongs);
+                    if (relatedSongs && relatedSongs.length > 0) {
+                        const nextSong = relatedSongs[0];
+                        console.log(`Chuyển đến bài hát tiếp theo: "${nextSong.title}"`);
+                        
+                        // Thực hiện chuyển trang đến bài hát gợi ý đầu tiên
+                        navigate(`/song/${nextSong._id}`);
+                    } else {
+                        console.log("Không tìm thấy bài hát gợi ý nào để chuyển tiếp.");
+                        // (Tùy chọn) Bạn có thể chuyển đến một bài hát ngẫu nhiên hoặc trang chủ
+                        // navigate('/'); 
+                    }
+                } catch (error) {
+                    console.error('Lỗi khi lấy bài hát tiếp theo:', error);
+                }
+            });
 
             return () => {
                 player.destroy();
@@ -83,49 +153,41 @@ function SongDetail() {
             };
         }
         
-    }, [song?.audio]); // Chạy lại khi song thay đổi
+    }, [song]); // Thêm relatedSongs và navigate vào dependency
 
-   useEffect(() => {
-    if (song) {
-        const fetchApiHistory = async () => {
-          await addHistory(songId)
-        }
-        fetchApiHistory();
-      }
-   },[song])
 
-    const handlePlay = () => {
-        const player = playerRef.current;
-        if (!player) return;
+    const handlePlay = () => playerRef.current?.toggle();
 
-        if (isPlaying) {
-            player.pause();
-            setIsPlaying(false);
-        } else {
-            player.play();
-            setIsPlaying(true);
+    // --- THAY ĐỔI 2: Tối ưu hóa hàm handleAddFavorite ---
+    const handleAddFavorite = async () => {
+        // Cập nhật giao diện một cách "lạc quan" (optimistic UI update)
+        const newFavoriteStatus = !isFavorite;
+        setIsFavorite(newFavoriteStatus);
+        setLikeCount(prev => newFavoriteStatus ? prev + 1 : prev - 1);
+        
+        try {
+            // Gửi yêu cầu lên server ở chế độ nền
+            await addFavorite(songId);
+        } catch (error) {
+            // Nếu có lỗi, đảo ngược lại thay đổi trên UI
+            console.error("Lỗi khi cập nhật yêu thích:", error);
+            setIsFavorite(!newFavoriteStatus);
+            setLikeCount(prev => newFavoriteStatus ? prev - 1 : prev + 1);
+            toast.error("Đã có lỗi xảy ra!");
         }
     };
-    const handleAddFavorite = async () => {
+    
+    // Hàm riêng để tải lại danh sách playlist sau khi thêm
+    const refreshPlaylists = async () => {
         try {
-            setIsFavorite(!isFavorite);
-            await addFavorite(songId);
-            setSong(prev => {
-                if (!prev) return prev;
-                return {
-                    ...prev,
-                    like: isFavorite ? prev.like - 1 : prev.like + 1
-                };
-            });
+            const response = await getPlayList(); // Giả sử hàm này lấy tất cả playlist của user
+            setAllPlayList(response.data);
         } catch (error) {
-            console.log("error", error)
+            console.error("Lỗi khi tải lại playlists:", error);
         }
     }
-    const handlePlayList = async () => {
-        setIsModelPlayList(true)
-    }
-    
 
+    const handlePlayList = () => setIsModelPlayList(true);
     
     return (
         <> 
@@ -148,7 +210,7 @@ function SongDetail() {
                             </span>
                         ))}
                         </p>
-                        <p>{song.like} người yêu thích</p>
+                        <p>{likeCount} người yêu thích</p>
                     </div>
                     <div>
                         <Button className="button" onClick={handlePlay} icon={isPlaying ? <PauseOutlined /> : <PlayCircleOutlined />} style={{marginTop: "10px"}} >{isPlaying ? "Dừng" : "Phát"}</Button>
@@ -220,9 +282,10 @@ function SongDetail() {
                                 }
                                 
                                 const response = await addPlayList(songId, playListId);
+                                // --- THAY ĐỔI 4: Không gọi fetchApi() nữa ---
+                                refreshPlaylists(); // Chỉ tải lại danh sách playlist
                                 setIsModelPlayList(false)
                                 toast.success(response.data.message);
-                                fetchApi();
                             } catch (error) {
                                 console.log(error);
                             }
@@ -244,9 +307,10 @@ function SongDetail() {
                                     return;
                                 }
                                 await createPlayList(songId,value)
+                                 // --- THAY ĐỔI 4: Không gọi fetchApi() nữa ---
+                                refreshPlaylists(); // Chỉ tải lại danh sách playlist
                                 setIsModelPlayList(false);
                                 toast.success(`Đã thêm vào PlayList ${value}`)
-                                fetchApi();
                             } catch (error) {
                                 console.log(error)
                             }
@@ -258,7 +322,9 @@ function SongDetail() {
 
 
             </Row>
+            <h2>Có thể bạn cũng thích</h2>    
+            <CarouselImage songs={relatedSongs} />
         </>
-    )
+    );
 }
 export default SongDetail;

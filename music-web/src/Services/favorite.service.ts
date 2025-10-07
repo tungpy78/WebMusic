@@ -1,6 +1,6 @@
 import { get} from "../Utils/authorizedAxios";
 
-export const getFavorite = async () => {
-    const result = await get(`favorite`);
+export const getFavoritePaginated = async (page: number, limit: number) => {
+    const result = await get(`favorite?page=${page}&limit=${limit}`);
     return result;
 }

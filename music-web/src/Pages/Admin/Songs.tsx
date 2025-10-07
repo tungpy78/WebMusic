@@ -1,7 +1,7 @@
 import React, { JSX, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    getAllSong,
+    getRankingsPaginated,
     create_song,
     update_song,
     delete_song,

@@ -1,35 +1,39 @@
 import { useEffect, useState } from "react"
-import { getHistory } from "../../Services/history.service";
-import { History } from "../../models/history.model";
 import { PlayCircleOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import { getRecommendedSongs } from "../../Services/recomandation.service";
+import { Song } from "../../models/song.model";
 
 function HintMusic(){
-    const [history, setHistory] = useState<History[]>([])
+    const [recommendedSongs, setRecommendedSongs] = useState<Song[]>([])
     useEffect(() => {
         const fetchApi = async () => {
-            const response = await getHistory();
-            setHistory(response.data.slice(0, 6)) // <-- Lấy 6 phần tử đầu
+            try {
+                const response = await getRecommendedSongs();
+                setRecommendedSongs(response.data.slice(0, 6)); // Lấy 6 bài hát gợi ý
+            } catch (error) {
+                console.error("Error fetching recommended songs:", error);
+            }
         }
         fetchApi();
     },[])
-    console.log("history",history);
+    console.log("recommendedSongs",recommendedSongs);
     return (
         <>
         <h2>Gợi ý cho bạn</h2>
         <div className="inner__list">
-            {history.map((item) => (
-                <Link to={`/song/${item.songId._id}`} className="inner__item" style={{ textDecoration: 'none', color: 'inherit' }} key={item._id}>
+            {recommendedSongs.map((item) => (
+                <Link to={`/song/${item._id}`} className="inner__item" style={{ textDecoration: 'none', color: 'inherit' }} key={item._id}>
                     <div className="inner__item--image">
-                        <img src={item.songId.avatar} alt={item.songId.title} />
+                        <img src={item.avatar} alt={item.title} />
                     </div>
                     <div className="inner__item--title">
-                        <h4>{item.songId.title}</h4>
+                        <h4>{item.title}</h4>
                         <p>
-                        {item.songId.artist.map((artist, index) => (
+                        {item.artist.map((artist, index) => (
                             <span key={artist._id}>
                                 <Link to={`/artist/${artist._id}`}>{artist.name}</Link>
-                                {index < item.songId.artist.length - 1 && ", "}
+                                {index < item.artist.length - 1 && ", "}
                             </span>
                         ))}
                         </p>

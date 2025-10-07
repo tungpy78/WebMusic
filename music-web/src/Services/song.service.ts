@@ -10,8 +10,11 @@ export const getSong = async (songId: string) => {
     return result;
 }
 
-export const getAllSong = async () => {
-    const result = await get(`song`);
+export const getRankingsPaginated = async (page: number, limit: number) => {
+    // Hàm này sẽ gọi đến endpoint mới của backend đã hỗ trợ phân trang
+    // Ví dụ: /api/song/rankings?page=1&limit=20
+    // Giả sử bạn có một hàm `get` để thực hiện request GET
+    const result = await get(`song/rankings?page=${page}&limit=${limit}`);
     return result;
 }
 

@@ -55,37 +55,34 @@
         margin-left: 0;
     }
     &__sider{
-        position: fixed;
+        position: sticky !important; // "Dính" lại khi cuộn trang
         top: 70px;
         left: 0;
         height: calc(100vh - 70px); // Giữ chiều cao cố định
-        width: 200px;
-        background-color: #001529;
-        z-index: 1000;
-        transition: transform 0.3s ease;
-        flex-shrink: 0;
-
-        &.hidden {
-        transform: translateX(-100%);
-      }
+        background-color: #231B2E !important;
+        overflow: auto;
+        
+        // Làm mượt hiệu ứng thu gọn của Sider do Antd cung cấp
+        &.ant-layout-sider-collapsed {
+            // Bạn có thể thêm style riêng cho Sider khi thu gọn ở đây
+        };
       ul{
         background-color: #001529 !important;
       }
     }
-    @media (max-width: 991.98px) {
-      &__sider{
-        width: 170px !important;
-        min-width: 170px !important;
-        max-width: 170px !important;
-      }
+     &__main-wrapper {
+        // Ant Design sẽ tự động thêm transition cho margin-left ở đây
+        // khi Sider thu vào/mở ra.
+        background-color: #170F23;
     }
+
     &__content{
         flex: 1;
         background-color: #170F23;
         color: #fff;
-        padding: 50px;
-        height: calc(100vh - 70px);
-       
+        padding: 24px;
+        // Chiều cao tối thiểu để đẩy footer xuống
+        min-height: calc(100vh - 70px - 150px); // Ví dụ: trừ đi chiều cao header và footer
     }
     @media (max-width: 575.98px) {
         &__content{

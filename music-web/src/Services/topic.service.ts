@@ -12,8 +12,8 @@ export const getTopicAdmin = async () => {
     return result;
 }
 
-export const getSongByTopic = async (topicId: string) => {
-    const result = await get(`topic/${topicId}`);
+export const getSongsByCategoryPaginated = async (topicId: string, page: number, limit: number) => {
+    const result = await get(`topic/${topicId}?page=${page}&limit=${limit}`);
     return result;
 }
 

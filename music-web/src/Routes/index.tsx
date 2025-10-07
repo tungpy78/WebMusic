@@ -29,6 +29,8 @@ import AlbumDetail from "../Pages/Client/albumDetail";
 import ArtistPage from "../Pages/Client/artist.page";
 import Page404 from "../Pages/Client/page404";
 import ProfileAdmin from "../Pages/Admin/ProfileAdmin";
+import Favorite from "../Components/element/favorite";
+import PlaylistPage from "../Components/element/playlist.page";
 
 const getUser = () => {
     try {
@@ -101,6 +103,14 @@ export const routes =[
             {
                 path: "/library",
                 element: <Library />,
+            },
+            {
+                path: "/favorite",
+                element: <Favorite />,
+            },
+            {
+                path: "/playlist",
+                element: <PlaylistPage />,
             },
             {
                 path: "/playlist/:playlistId",
