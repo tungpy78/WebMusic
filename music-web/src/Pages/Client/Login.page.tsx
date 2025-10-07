@@ -37,11 +37,11 @@ function Login(){
                 <Form layout="vertical" name="FormLogin" onFinish={handleSubmit}>
                     <h1 style={{textAlign:"center"}}>Login</h1>
                     <Form.Item
-                        label="Username"
+                        label="Phone"
                         name="phone"
                         rules={[{ required: true, message: 'Please input your phone!' }]}
                     >
-                        <Input placeholder="Username" />
+                        <Input placeholder="Phone" />
                     </Form.Item>
                     <Form.Item
                         label="Password"

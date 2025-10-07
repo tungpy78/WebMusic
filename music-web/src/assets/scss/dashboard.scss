@@ -206,5 +206,12 @@
 @media (max-width: 575.98px) {
     .topic__item{
         width: 70%;
+        margin: 0 auto;            // tự căn giữa bản thân
+        flex: 0 0 70%;             // (tuỳ) đảm bảo giữ đúng 70% khi là flex-item
+    }
+    .topic__list{
+        justify-content: center;   // căn giữa các phần tử trong flex container
+         // flex-wrap: wrap;        // (tuỳ) nếu muốn các item xuống dòng thay vì tràn ngang
+        
     }
 }

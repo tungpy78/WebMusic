@@ -23,7 +23,7 @@
             align-items: center;
             justify-content:center ;
             height: 100%; // đảm bảo logo nằm giữa
-            width: 200px;
+            margin-left: 20px;
             img{
                 height: 70px;
                 object-fit: contain;   
@@ -39,7 +39,7 @@
         }
         @media (max-width: 575.98px) {
           &--search{
-            width: 150px;
+            width: 120px;
           }
         }
         &--account{
