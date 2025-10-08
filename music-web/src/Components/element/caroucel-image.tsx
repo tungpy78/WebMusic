@@ -5,6 +5,7 @@ import "../../assets/scss/dashboard.scss";
 // Import CSS cho slider
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import { PlayCircleOutlined } from "@ant-design/icons";
 
 // --- THAY ĐỔI 1: Định nghĩa props để nhận dữ liệu từ bên ngoài ---
 interface CarouselImageProps {
@@ -41,6 +42,7 @@ function CarouselImage({ songs }: CarouselImageProps) {
     }
 
     return (
+        <>
         <div className="carousel__container related-songs-carousel">
             <Slider {...settings}>
                 {/* --- THAY ĐỔI 3: Dùng `songs` từ props thay vì `dataSong` --- */}
@@ -72,6 +74,32 @@ function CarouselImage({ songs }: CarouselImageProps) {
                 ))}
             </Slider>
         </div>
+        <h2>Gợi ý cho bạn</h2>
+        <div className="inner__list">
+            {songs.map((item) => (
+                <Link to={`/song/${item._id}`} className="inner__item" style={{ textDecoration: 'none', color: 'inherit' }} key={item._id}>
+                    <div className="inner__item--image">
+                        <img src={item.avatar} alt={item.title} />
+                    </div>
+                    <div className="inner__item--title">
+                        <h4>{item.title}</h4>
+                        <p>
+                        {item.artist.map((artist, index) => (
+                            <span key={artist._id}>
+                                <Link to={`/artist/${artist._id}`}>{artist.name}</Link>
+                                {index < item.artist.length - 1 && ", "}
+                            </span>
+                        ))}
+                        </p>
+                    </div>
+                    <div className="play-button">
+                        <PlayCircleOutlined />
+                    </div>
+                </Link>
+            ))}
+        </div>
+        </>
+        
     );
 }
 
